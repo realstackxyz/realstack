@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .layer { font-family: Arial, sans-serif; font-size: 14px; }
+      .layer-title { font-weight: bold; font-size: 16px; fill: #ffffff; }
+      .component { font-size: 12px; }
+      .arrow { fill: none; stroke: #333; stroke-width: 2; }
+      .layer-frontend { fill: #4285F4; }
+      .layer-backend { fill: #34A853; }
+      .layer-blockchain { fill: #FBBC05; }
+      .layer-asset { fill: #EA4335; }
+    </style>
+  </defs>
+  
+  <!-- Layers -->
+  <g>
+    <!-- Frontend Layer -->
+    <rect x="100" y="100" width="600" height="80" class="layer-frontend" rx="10" ry="10" />
+    <text x="400" y="135" text-anchor="middle" class="layer layer-title">Frontend Layer</text>
+    <text x="180" y="165" class="layer component">Asset Discovery</text>
+    <text x="320" y="165" class="layer component">Portfolio Dashboard</text>
+    <text x="480" y="165" class="layer component">Governance UI</text>
+    <text x="620" y="165" class="layer component">Wallet Integration</text>
+    
+    <!-- Backend Layer -->
+    <rect x="100" y="220" width="600" height="80" class="layer-backend" rx="10" ry="10" />
+    <text x="400" y="255" text-anchor="middle" class="layer layer-title">Backend Layer</text>
+    <text x="180" y="285" class="layer component">Authentication</text>
+    <text x="320" y="285" class="layer component">Asset Management</text>
+    <text x="480" y="285" class="layer component">Verification</text>
+    <text x="620" y="285" class="layer component">Blockchain Interface</text>
+    
+    <!-- Blockchain Layer -->
+    <rect x="100" y="340" width="600" height="80" class="layer-blockchain" rx="10" ry="10" />
+    <text x="400" y="375" text-anchor="middle" class="layer layer-title">Blockchain Layer</text>
+    <text x="180" y="405" class="layer component">REAL Token</text>
+    <text x="320" y="405" class="layer component">Asset Tokens</text>
+    <text x="480" y="405" class="layer component">Governance</text>
+    <text x="620" y="405" class="layer component">Verification</text>
+    
+    <!-- Asset Management Layer -->
+    <rect x="100" y="460" width="600" height="80" class="layer-asset" rx="10" ry="10" />
+    <text x="400" y="495" text-anchor="middle" class="layer layer-title">Asset Management Layer</text>
+    <text x="180" y="525" class="layer component">Verification</text>
+    <text x="320" y="525" class="layer component">Legal Compliance</text>
+    <text x="480" y="525" class="layer component">Income Distribution</text>
+    <text x="620" y="525" class="layer component">Value Assessment</text>
+  </g>
+  
+  <!-- Arrows -->
+  <g>
+    <path d="M400,180 L400,220" class="arrow" marker-end="url(#arrowhead)" />
+    <path d="M400,300 L400,340" class="arrow" marker-end="url(#arrowhead)" />
+    <path d="M400,420 L400,460" class="arrow" marker-end="url(#arrowhead)" />
+  </g>
+  
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" />
+    </marker>
+  </defs>
+</svg> 

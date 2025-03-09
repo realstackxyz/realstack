@@ -1,0 +1,35 @@
+[package]
+name = "realstack"
+version = "0.1.0"
+description = "Real-world asset tokenization platform on Solana"
+edition = "2021"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "realstack"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+solana-program = "1.16.0"
+anchor-lang = "0.28.0"
+anchor-spl = "0.28.0"
+spl-token = { version = "3.5.0", features = ["no-entrypoint"] }
+thiserror = "1.0.40"
+borsh = "0.10.0"
+
+[dev-dependencies]
+solana-program-test = "1.16.0"
+solana-sdk = "1.16.0"
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+codegen-units = 1
+opt-level = 3 

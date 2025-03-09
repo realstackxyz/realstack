@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: realstack-frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_API_URL=http://localhost:5000
+      - REACT_APP_SOLANA_NETWORK=localhost
+    depends_on:
+      - backend
+    networks:
+      - realstack-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: realstack-backend
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/realstack
+      - JWT_SECRET=dev_jwt_secret_change_in_production
+      - SOLANA_NETWORK=http://solana:8899
+    depends_on:
+      - mongo
+      - solana
+    networks:
+      - realstack-network
+
+  mongo:
+    image: mongo:latest
+    container_name: realstack-mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - realstack-network
+
+  solana:
+    image: solanalabs/solana:stable
+    container_name: realstack-solana-validator
+    ports:
+      - '8899:8899'
+      - '8900:8900'
+    volumes:
+      - solana-ledger:/root/.local/share/solana/install
+    command: solana-test-validator
+    networks:
+      - realstack-network
+
+networks:
+  realstack-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  solana-ledger: 

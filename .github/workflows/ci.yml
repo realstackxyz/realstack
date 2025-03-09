@@ -1,0 +1,133 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-and-test-frontend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+        cache-dependency-path: 'apps/frontend/package-lock.json'
+    
+    - name: Install Dependencies
+      run: |
+        cd apps/frontend
+        npm ci
+    
+    - name: Lint Frontend
+      run: |
+        cd apps/frontend
+        npm run lint
+    
+    - name: Test Frontend
+      run: |
+        cd apps/frontend
+        npm test -- --coverage
+        
+  lint-and-test-backend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+        cache-dependency-path: 'apps/backend/package-lock.json'
+    
+    - name: Install Dependencies
+      run: |
+        cd apps/backend
+        npm ci
+    
+    - name: Lint Backend
+      run: |
+        cd apps/backend
+        npm run lint
+    
+    - name: Test Backend
+      run: |
+        cd apps/backend
+        npm test -- --coverage
+  
+  test-contracts:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+    
+    - name: Set up Solana
+      uses: ./.github/actions/setup-solana
+      with:
+        solana-version: '1.16.0'
+    
+    - name: Set up Anchor
+      run: |
+        npm install -g @project-serum/anchor-cli@0.27.0
+        
+    - name: Build Contracts
+      run: |
+        cd contracts
+        anchor build
+        
+    - name: Test Contracts
+      run: |
+        cd contracts
+        anchor test
+  
+  build:
+    needs: [lint-and-test-frontend, lint-and-test-backend, test-contracts]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    
+    - name: Build Frontend
+      run: |
+        cd apps/frontend
+        npm ci
+        npm run build
+    
+    - name: Build Backend
+      run: |
+        cd apps/backend
+        npm ci
+        npm run build
+    
+    - name: Upload Frontend Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: apps/frontend/build
+    
+    - name: Upload Backend Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-build
+        path: apps/backend/dist 
