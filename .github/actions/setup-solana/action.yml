@@ -1,0 +1,23 @@
+name: 'Setup Solana'
+description: 'Setup Solana CLI'
+inputs:
+  solana-version:
+    description: 'Solana version to install'
+    required: false
+    default: 'stable'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Solana
+      shell: bash
+      run: |
+        echo "Installing Solana ${{ inputs.solana-version }}"
+        sh -c "$(curl -sSfL https://release.solana.com/v${{ inputs.solana-version }}/install)"
+        echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+        
+    - name: Setup Solana Config
+      shell: bash
+      run: |
+        mkdir -p ~/.config/solana
+        echo "[[ -f ~/.config/solana/id.json ]] || solana-keygen new --no-bip39-passphrase -o ~/.config/solana/id.json"
+        solana config set --url https://api.devnet.solana.com 
