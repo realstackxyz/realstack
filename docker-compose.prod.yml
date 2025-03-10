@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    container_name: realstack-frontend-prod
+    ports:
+      - '80:80'
+    restart: always
+    depends_on:
+      - backend
+    networks:
+      - realstack-network
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: realstack-backend-prod
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=${MONGODB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - SOLANA_NETWORK=${SOLANA_NETWORK}
+      - SOLANA_RPC_URL=${SOLANA_RPC_URL}
+    ports:
+      - '5000:5000'
+    volumes:
+      - backend-logs:/app/logs
+    depends_on:
+      - mongo
+    networks:
+      - realstack-network
+
+  mongo:
+    image: mongo:latest
+    container_name: realstack-mongo-prod
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    networks:
+      - realstack-network
+
+networks:
+  realstack-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  backend-logs: 

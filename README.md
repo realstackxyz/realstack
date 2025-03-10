@@ -26,6 +26,7 @@ RealStack bridges the gap between traditional physical assets and blockchain tec
 ### Prerequisites
 
 - Node.js (v16+)
+- npm (v8+)
 - Rust (v1.65+)
 - Solana CLI (v1.16+)
 - Anchor Framework (v0.27+)
@@ -35,33 +36,21 @@ RealStack bridges the gap between traditional physical assets and blockchain tec
 
 ```bash
 # Clone the repository
-git clone https://github.com/RealStack-xyz/realstack.git
+git clone https://github.com/realstackxyz/realstack.git
 cd realstack
 
 # Install dependencies
 npm install
 
 # Configure environment
-cp .env.example .env
+cp .env.development .env
 # Edit .env with your configuration
 
-# Build the Solana program
-cd contracts
-anchor build
-
-# Deploy the program (on devnet for testing)
-anchor deploy --provider.cluster devnet
-
-# Run the frontend development server
-cd ../apps/frontend
-npm run start
-
-# In a separate terminal, run the backend
-cd ../backend
-npm run dev
+# Start the development services
+npm start
 ```
 
-Visit `http://localhost:3000` to access the application.
+For detailed development instructions, see our [Development Guide](docs/en/development.md).
 
 ## 🏗️ Architecture
 
@@ -180,11 +169,9 @@ RealStack/
 ### Phase 1: Foundation (Q3 2023)
 - ✅ Platform development and security audits
 - ✅ Legal framework establishment
-- ✅ Pump.fun launch preparation
 - ✅ Advisory board formation
 
 ### Phase 2: Market Entry (Q4 2023)
-- 🔄 Pump.fun token launch
 - 🔄 First asset tokenization showcase
 - 🔄 Liquidity incentive program deployment
 - 🔄 Basic governance activation
@@ -203,45 +190,11 @@ RealStack/
 
 ## 🛠️ Development
 
-### Testing
-
-```bash
-# Run frontend tests
-cd apps/frontend
-npm test
-
-# Run backend tests
-cd ../backend
-npm test
-
-# Run contract tests
-cd ../../contracts
-anchor test
-```
-
-### Code Style
-
-We use ESLint and Prettier for JavaScript/TypeScript code quality:
-
-```bash
-# Check code style
-npm run lint
-
-# Automatically fix issues
-npm run lint:fix
-```
+See our [Development Guide](docs/en/development.md) for detailed instructions on setting up your development environment, running tests, and building the application.
 
 ## 🤝 Contributing
 
 We welcome contributions from the community! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
-
-### Development Workflow
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## ❓ FAQ
 

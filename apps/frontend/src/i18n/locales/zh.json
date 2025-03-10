@@ -1,0 +1,113 @@
+{
+  "app": {
+    "name": "RealStack",
+    "tagline": "区块链资产通证化平台"
+  },
+  "nav": {
+    "home": "首页",
+    "market": "市场",
+    "assets": "资产",
+    "governance": "治理",
+    "dashboard": "仪表盘",
+    "login": "登录",
+    "register": "注册",
+    "logout": "登出",
+    "profile": "个人资料",
+    "settings": "设置"
+  },
+  "footer": {
+    "company": "公司",
+    "about": "关于我们",
+    "careers": "招贤纳士",
+    "contact": "联系我们",
+    "blog": "博客",
+    "legal": "法律",
+    "terms": "服务条款",
+    "privacy": "隐私政策",
+    "compliance": "合规",
+    "security": "安全",
+    "copyright": "© {{year}} RealStack. 保留所有权利。"
+  },
+  "home": {
+    "hero": {
+      "title": "在Solana上实现实物资产通证化",
+      "subtitle": "将传统资产引入区块链，实现部分所有权和增强流动性",
+      "cta": "探索资产"
+    },
+    "features": {
+      "title": "为什么选择RealStack？",
+      "tokenization": {
+        "title": "资产通证化",
+        "description": "将实物资产转化为区块链上的数字代币"
+      },
+      "fractional": {
+        "title": "部分所有权",
+        "description": "以最少的资金投资高价值资产"
+      },
+      "liquidity": {
+        "title": "增强流动性",
+        "description": "在二级市场上轻松交易您的资产代币"
+      },
+      "verification": {
+        "title": "透明验证",
+        "description": "所有资产都经过严格的多阶段验证过程"
+      }
+    }
+  },
+  "market": {
+    "title": "资产市场",
+    "filter": "筛选资产",
+    "search": "搜索资产...",
+    "categories": {
+      "all": "所有类别",
+      "real_estate": "房地产",
+      "art": "艺术品",
+      "collectibles": "收藏品",
+      "vehicles": "车辆",
+      "business": "企业股权"
+    },
+    "sort": {
+      "newest": "最新优先",
+      "oldest": "最早优先",
+      "price_high": "价格：高到低",
+      "price_low": "价格：低到高"
+    },
+    "no_results": "未找到符合您条件的资产。"
+  },
+  "asset": {
+    "details": "资产详情",
+    "description": "描述",
+    "gallery": "图库",
+    "documents": "文档",
+    "verification": "验证",
+    "tokenization": "通证化详情",
+    "invest": "立即投资",
+    "location": "位置",
+    "owner": "所有者",
+    "value": "资产价值",
+    "status": {
+      "pending": "等待验证",
+      "verified": "已验证",
+      "tokenized": "已通证化",
+      "rejected": "验证被拒绝"
+    }
+  },
+  "dashboard": {
+    "portfolio": "投资组合概览",
+    "assets": "我的资产",
+    "transactions": "交易历史",
+    "balance": "余额",
+    "total_value": "总价值"
+  },
+  "wallet": {
+    "connect": "连接钱包",
+    "disconnect": "断开连接",
+    "no_wallet": "未检测到钱包"
+  },
+  "errors": {
+    "generic": "出现错误。请稍后再试。",
+    "not_found": "未找到请求的资源。",
+    "unauthorized": "您需要登录才能访问此资源。",
+    "forbidden": "您没有权限访问此资源。"
+  }
+} 

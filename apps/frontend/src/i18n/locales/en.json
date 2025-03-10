@@ -1,0 +1,113 @@
+{
+  "app": {
+    "name": "RealStack",
+    "tagline": "Real-World Asset Tokenization Platform"
+  },
+  "nav": {
+    "home": "Home",
+    "market": "Market",
+    "assets": "Assets",
+    "governance": "Governance",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "footer": {
+    "company": "Company",
+    "about": "About Us",
+    "careers": "Careers",
+    "contact": "Contact Us",
+    "blog": "Blog",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "compliance": "Compliance",
+    "security": "Security",
+    "copyright": "© {{year}} RealStack. All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "title": "Tokenize Real-World Assets on Solana",
+      "subtitle": "Bringing traditional assets to the blockchain for fractional ownership and enhanced liquidity",
+      "cta": "Explore Assets"
+    },
+    "features": {
+      "title": "Why RealStack?",
+      "tokenization": {
+        "title": "Asset Tokenization",
+        "description": "Convert real-world assets into digital tokens on the blockchain"
+      },
+      "fractional": {
+        "title": "Fractional Ownership",
+        "description": "Invest in high-value assets with minimal capital"
+      },
+      "liquidity": {
+        "title": "Enhanced Liquidity",
+        "description": "Trade your asset tokens easily on secondary markets"
+      },
+      "verification": {
+        "title": "Transparent Verification",
+        "description": "All assets go through a rigorous multi-stage verification process"
+      }
+    }
+  },
+  "market": {
+    "title": "Asset Marketplace",
+    "filter": "Filter Assets",
+    "search": "Search assets...",
+    "categories": {
+      "all": "All Categories",
+      "real_estate": "Real Estate",
+      "art": "Art",
+      "collectibles": "Collectibles",
+      "vehicles": "Vehicles",
+      "business": "Business Equity"
+    },
+    "sort": {
+      "newest": "Newest First",
+      "oldest": "Oldest First",
+      "price_high": "Price: High to Low",
+      "price_low": "Price: Low to High"
+    },
+    "no_results": "No assets found matching your criteria."
+  },
+  "asset": {
+    "details": "Asset Details",
+    "description": "Description",
+    "gallery": "Gallery",
+    "documents": "Documents",
+    "verification": "Verification",
+    "tokenization": "Tokenization Details",
+    "invest": "Invest Now",
+    "location": "Location",
+    "owner": "Owner",
+    "value": "Asset Value",
+    "status": {
+      "pending": "Pending Verification",
+      "verified": "Verified",
+      "tokenized": "Tokenized",
+      "rejected": "Verification Rejected"
+    }
+  },
+  "dashboard": {
+    "portfolio": "Portfolio Overview",
+    "assets": "My Assets",
+    "transactions": "Transaction History",
+    "balance": "Balance",
+    "total_value": "Total Value"
+  },
+  "wallet": {
+    "connect": "Connect Wallet",
+    "disconnect": "Disconnect",
+    "no_wallet": "No wallet detected"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again later.",
+    "not_found": "The requested resource was not found.",
+    "unauthorized": "You need to log in to access this resource.",
+    "forbidden": "You don't have permission to access this resource."
+  }
+} 

@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "mikestead.dotenv",
+    "rust-lang.rust-analyzer",
+    "serayuzgur.crates",
+    "tamasfe.even-better-toml",
+    "solana.solana",
+    "bradlc.vscode-tailwindcss",
+    "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-preview-github-styles",
+    "editorconfig.editorconfig",
+    "ms-azuretools.vscode-docker",
+    "christian-kohler.path-intellisense",
+    "wix.vscode-import-cost"
+  ]
+} 
