@@ -1,0 +1,82 @@
+name: Security Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight
+
+jobs:
+  dependencies:
+    name: Dependency Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          cd apps/frontend
+          npm ci || npm install
+          cd ../backend
+          npm ci || npm install
+      
+      - name: Run npm audit (Frontend)
+        run: |
+          cd apps/frontend
+          npm audit --production || true
+      
+      - name: Run npm audit (Backend)
+        run: |
+          cd apps/backend
+          npm audit --production || true
+  
+  code-scan:
+    name: Code Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+  
+  solana-audit:
+    name: Solana Program Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      
+      - name: Install Solana validators
+        uses: ./.github/actions/setup-solana
+        with:
+          solana-version: '1.16.0'
+      
+      - name: Install cargo audit
+        run: cargo install cargo-audit
+      
+      - name: Audit Rust dependencies
+        run: |
+          cd contracts
+          cargo audit 

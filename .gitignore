@@ -74,4 +74,15 @@ frontend/build/
 frontend/dist/
 
 # Misc
-.DS_Store 
+.DS_Store
+
+# Security and keys
+*.pem
+*.key
+*.cert
+*.jks
+wallet-seed.json
+keypair.json
+id.json
+*.wallet
+*.keystore 

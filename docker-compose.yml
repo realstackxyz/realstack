@@ -3,13 +3,13 @@ version: '3.8'
 services:
   frontend:
     build:
-      context: ./frontend
+      context: ./apps/frontend
       dockerfile: Dockerfile.dev
     container_name: realstack-frontend
     ports:
       - '3000:3000'
     volumes:
-      - ./frontend:/app
+      - ./apps/frontend:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
@@ -22,13 +22,13 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: ./apps/backend
       dockerfile: Dockerfile.dev
     container_name: realstack-backend
     ports:
       - '5000:5000'
     volumes:
-      - ./backend:/app
+      - ./apps/backend:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development

@@ -1,0 +1,53 @@
+{
+  "name": "realstack",
+  "version": "1.0.1",
+  "description": "RealStack - Real-World Asset Tokenization Platform on Solana",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "start:frontend": "cd apps/frontend && npm start",
+    "start:backend": "cd apps/backend && npm run dev",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "build:frontend": "cd apps/frontend && npm run build",
+    "build:backend": "cd apps/backend && npm run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "test:frontend": "cd apps/frontend && npm test",
+    "test:backend": "cd apps/backend && npm test",
+    "test": "npm run test:backend && npm run test:frontend",
+    "lint:frontend": "cd apps/frontend && npm run lint",
+    "lint:backend": "cd apps/backend && npm run lint",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "clean": "rm -rf apps/frontend/build apps/backend/dist node_modules apps/*/node_modules",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "docker:logs": "docker-compose logs -f",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=16",
+    "npm": ">=8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/realstackxyz/realstack.git"
+  },
+  "author": "RealStack Team",
+  "license": "MIT"
+} 
