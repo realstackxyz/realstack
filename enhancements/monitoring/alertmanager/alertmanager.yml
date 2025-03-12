@@ -1,0 +1,67 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'smtp.example.com:587'
+  smtp_from: 'alertmanager@realstack.io'
+  smtp_auth_username: 'alertmanager@realstack.io'
+  smtp_auth_password: 'password'
+  smtp_require_tls: true
+
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+route:
+  group_by: ['alertname', 'job', 'severity']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'ops-team'
+  routes:
+  - match:
+      severity: critical
+    receiver: 'pagerduty'
+    continue: true
+  - match:
+      severity: warning
+    receiver: 'slack'
+    continue: true
+  - match_re:
+      service: frontend|api
+    receiver: 'dev-team'
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance']
+
+receivers:
+- name: 'ops-team'
+  email_configs:
+  - to: 'ops-team@realstack.io'
+    send_resolved: true
+
+- name: 'dev-team'
+  email_configs:
+  - to: 'dev-team@realstack.io'
+    send_resolved: true
+
+- name: 'pagerduty'
+  pagerduty_configs:
+  - service_key: 'your_pagerduty_service_key'
+    send_resolved: true
+
+- name: 'slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+    channel: '#alerts'
+    send_resolved: true
+    icon_emoji: ':warning:'
+    title: "{{ .GroupLabels.alertname }}"
+    text: >-
+      {{ range .Alerts }}
+        *Alert:* {{ .Annotations.summary }}
+        *Description:* {{ .Annotations.description }}
+        *Severity:* {{ .Labels.severity }}
+        *Instance:* {{ .Labels.instance }}
+      {{ end }} 

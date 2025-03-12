@@ -1,0 +1,116 @@
+groups:
+  - name: RealStack_API_Alerts
+    rules:
+      - alert: HighAPILatency
+        expr: avg(http_request_duration_ms{route=~"^/api/.+"}) > 500
+        for: 5m
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: "High API latency detected"
+          description: "API latency is above 500ms for more than 5 minutes"
+          dashboard_url: "https://grafana.realstack.io/d/api-performance"
+
+      - alert: APIHighErrorRate
+        expr: sum(rate(http_requests_total{job="realstack-api", status_code=~"5.."}[5m])) / sum(rate(http_requests_total{job="realstack-api"}[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "High error rate detected in API"
+          description: "Error rate is above 5% for more than 2 minutes"
+          dashboard_url: "https://grafana.realstack.io/d/api-performance"
+
+      - alert: APIDown
+        expr: up{job="realstack-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "API service is down"
+          description: "The API service has been down for more than 1 minute"
+          
+  - name: RealStack_Frontend_Alerts
+    rules:
+      - alert: FrontendHighErrorRate
+        expr: sum(rate(http_requests_total{job="realstack-frontend", status_code=~"5.."}[5m])) / sum(rate(http_requests_total{job="realstack-frontend"}[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          service: frontend
+        annotations:
+          summary: "High error rate detected in Frontend"
+          description: "Error rate is above 5% for more than 2 minutes"
+          dashboard_url: "https://grafana.realstack.io/d/frontend-performance"
+
+      - alert: FrontendDown
+        expr: up{job="realstack-frontend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: frontend
+        annotations:
+          summary: "Frontend service is down"
+          description: "The Frontend service has been down for more than 1 minute"
+
+  - name: RealStack_System_Alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 10m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 85% for more than 10 minutes on {{ $labels.instance }}"
+          dashboard_url: "https://grafana.realstack.io/d/system-metrics"
+
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 90
+        for: 10m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 90% for more than 10 minutes on {{ $labels.instance }}"
+          dashboard_url: "https://grafana.realstack.io/d/system-metrics"
+
+      - alert: LowDiskSpace
+        expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 10
+        for: 10m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "Low disk space"
+          description: "Disk space is below 10% on {{ $labels.instance }}"
+          dashboard_url: "https://grafana.realstack.io/d/system-metrics"
+
+  - name: RealStack_Blockchain_Alerts
+    rules:
+      - alert: HighBlockchainLatency
+        expr: solana_rpc_response_time_seconds > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: blockchain
+        annotations:
+          summary: "High blockchain RPC latency"
+          description: "Solana RPC response time is above 2 seconds for more than 5 minutes"
+          dashboard_url: "https://grafana.realstack.io/d/blockchain-metrics"
+          
+      - alert: TransactionFailuresHigh
+        expr: rate(solana_transaction_failures_total[5m]) / rate(solana_transactions_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          service: blockchain
+        annotations:
+          summary: "High transaction failure rate"
+          description: "More than 10% of Solana transactions are failing for more than 5 minutes"
+          dashboard_url: "https://grafana.realstack.io/d/blockchain-metrics" 

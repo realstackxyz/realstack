@@ -183,14 +183,10 @@ async function main() {
   // Website
   const website = await prompt('Enter project website URL (optional): ');
   
-  // Twitter
-  const twitter = await prompt('Enter Twitter handle (without @, optional): ');
-  
-  // Telegram
-  const telegram = await prompt('Enter Telegram group name (optional): ');
-  
-  // Discord
-  const discord = await prompt('Enter Discord invite URL (optional): ');
+  // Social Media
+  const twitter = await prompt('Enter Twitter handle (optional): ');
+  const telegram = await prompt('Enter Telegram link (optional): ');
+  const github = await prompt('Enter GitHub repository URL (optional): ');
   
   // Logo
   console.log(chalk.yellow('\nTip: A token logo is required for pump.fun listings.'));
@@ -217,9 +213,9 @@ async function main() {
   console.log(`Mint Address: ${mintAddress}`);
   console.log(`Description: ${description}`);
   console.log(`Website: ${website || 'Not provided'}`);
-  console.log(`Twitter: ${twitter ? `@${twitter}` : 'Not provided'}`);
+  console.log(`Twitter: ${twitter || 'Not provided'}`);
   console.log(`Telegram: ${telegram || 'Not provided'}`);
-  console.log(`Discord: ${discord || 'Not provided'}`);
+  console.log(`GitHub: ${github || 'Not provided'}`);
   console.log(`Logo: ${logoReady ? 'Ready' : 'Not ready'}`);
   console.log(`Initial Liquidity: ${initialLiquidity} SOL`);
   console.log(`Initial Price: ${initialPrice} SOL`);
@@ -248,7 +244,7 @@ async function main() {
       website: website || null,
       twitter: twitter || null,
       telegram: telegram || null,
-      discord: discord || null,
+      github: github || null,
       logoReady,
       initialLiquidity,
       initialPrice,

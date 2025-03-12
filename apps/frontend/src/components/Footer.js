@@ -10,13 +10,14 @@ import {
   useTheme,
   useMediaQuery
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { 
   Twitter as TwitterIcon, 
-  Telegram as TelegramIcon, 
   GitHub as GitHubIcon, 
-  LinkedIn as LinkedInIcon,
-  Discord as DiscordIcon
+  LinkedIn as LinkedInIcon, 
+  Telegram as TelegramIcon
 } from '@mui/icons-material';
+import Logo from './Logo';
 
 const Footer = () => {
   const theme = useTheme();
@@ -29,28 +30,25 @@ const Footer = () => {
       component="footer" 
       sx={{ 
         bgcolor: 'background.paper',
-        pt: 6,
-        pb: 3,
-        mt: 'auto',
-        borderTop: 1,
+        py: 6, 
+        borderTop: 1, 
         borderColor: 'divider'
       }}
     >
       <Container maxWidth="lg">
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <img 
-                src="/logo.svg" 
-                alt="RealStack Logo" 
-                style={{ height: 40, marginRight: 8 }} 
+          <Grid item xs={12} md={4}>
+            <Box mb={2}>
+              <Logo 
+                sx={{ height: 40 }}
+                alt="RealStack Logo"
               />
-              <Typography variant="h6" color="text.primary">
+              <Typography variant="h6" color="text.primary" gutterBottom sx={{ display: 'inline-block', ml: 1 }}>
                 RealStack
               </Typography>
             </Box>
             <Typography variant="body2" color="text.secondary" paragraph>
-              区块链资产通证化平台，连接现实世界与数字经济。
+              Blockchain asset tokenization platform connecting real-world assets to the digital economy.
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <IconButton 
@@ -63,18 +61,9 @@ const Footer = () => {
                 <TwitterIcon />
               </IconButton>
               <IconButton 
-                aria-label="Discord" 
-                component="a" 
-                href="https://discord.gg/realstack" 
-                target="_blank"
-                size="small"
-              >
-                <DiscordIcon />
-              </IconButton>
-              <IconButton 
                 aria-label="GitHub" 
                 component="a" 
-                href="https://github.com/RealStack-xyz" 
+                href="https://github.com/realstackxyz/realstack" 
                 target="_blank"
                 size="small"
               >
@@ -224,7 +213,7 @@ const Footer = () => {
           gap: 2
         }}>
           <Typography variant="body2" color="text.secondary">
-            © {currentYear} RealStack. 保留所有权利。
+            © {currentYear} RealStack. All rights reserved.
           </Typography>
           
           <Box sx={{ 

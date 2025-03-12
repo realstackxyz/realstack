@@ -107,9 +107,9 @@ export const DATE_FORMAT = {
 
 // Contact Information
 export const CONTACT_INFO = {
-  email: 'info@realstack.finance',
-  twitter: '@RealStack_Finance',
-  discord: 'https://discord.gg/realstack'
+  email: 'info@realstack.xyz',
+  twitter: '@RealStack_xyz',
+  github: 'https://github.com/realstackxyz/realstack'
 };
 
 // Support Links

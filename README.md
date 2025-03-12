@@ -4,8 +4,9 @@
   <img src="assets/logos/realstack_logo.svg" alt="RealStack Logo" width="250">
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-  [![Website](https://img.shields.io/badge/Website-realstack.xyz-blue)](https://realstack.xyz)
+  [![Website](https://img.shields.io/badge/Website-realstack.xyz-blue)](https://www.realstack.xyz)
   [![Twitter](https://img.shields.io/badge/Twitter-@RealStack__xyz-blue)](https://x.com/RealStack_xyz)
+  [![GitHub](https://img.shields.io/badge/GitHub-realstackxyz-blue)](https://github.com/realstackxyz/realstack)
 </div>
 
 ## 🔑 Overview
@@ -18,19 +19,113 @@ RealStack bridges the gap between traditional physical assets and blockchain tec
 - **Fractional Ownership**: Invest in high-value assets with minimal capital
 - **Liquidity Enhancement**: Trade tokenized assets on secondary markets
 - **Transparent Verification**: Rigorous multi-stage verification process
-- **Decentralized Governance**: Community-driven decision making via REAL token
-- **Low Fees**: Leverage Solana's high throughput and low transaction costs
+- **Governance System**: Community-driven decision making
+- **Security-First Approach**: Advanced security measures for asset protection
 
-## 🚀 Quick Start
+## 🏗️ System Architecture
+
+RealStack employs a modern, scalable architecture designed for performance, security, and flexibility.
+
+### High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        Client Applications                          │
+│                                                                     │
+│   ┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐   │
+│   │   Web Interface │   │   Mobile App    │   │   Admin Portal  │   │
+│   │   (React/Next)  │   │   (React Native)│   │                 │   │
+│   └─────────────────┘   └─────────────────┘   └─────────────────┘   │
+└────────────────────────────────┬────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                           API Gateway                               │
+│                                                                     │
+│   ┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐   │
+│   │  Authentication │   │ Rate Limiting   │   │   API Routing   │   │
+│   │  & Authorization│   │ & Throttling   │   │   & Validation  │   │
+│   └─────────────────┘   └─────────────────┘   └─────────────────┘   │
+└────────────────────────────────┬────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                        Backend Services                             │
+│                                                                     │
+│ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐    │
+│ │ Asset       │ │ User        │ │ Verification│ │ Market      │    │
+│ │ Service     │ │ Service     │ │ Service     │ │ Service     │    │
+│ └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘    │
+│                                                                     │
+│ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐    │
+│ │ Governance  │ │ Notification│ │ Analytics   │ │ Security    │    │
+│ │ Service     │ │ Service     │ │ Service     │ │ Service     │    │
+│ └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘    │
+└────────────────────────────────┬────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                     External Integrations                           │
+│                                                                     │
+│   ┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐   │
+│   │  KYC/AML        │   │  Oracle         │   │  Payment        │   │
+│   │  Providers      │   │  Services       │   │  Gateways       │   │
+│   └─────────────────┘   └─────────────────┘   └─────────────────┘   │
+└────────────────────────────────┬────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                       Blockchain Layer                              │
+│                                                                     │
+│   ┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐   │
+│   │ Token Contract  │   │ Governance      │   │ Transaction     │   │
+│   │ Management      │   │ Contract        │   │ Management      │   │
+│   └─────────────────┘   └─────────────────┘   └─────────────────┘   │
+└────────────────────────────────┬────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                         Data Layer                                  │
+│                                                                     │
+│   ┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐   │
+│   │   PostgreSQL    │   │     Redis       │   │ IPFS/Storage    │   │
+│   │   Database      │   │     Cache       │   │ Solutions       │   │
+│   └─────────────────┘   └─────────────────┘   └─────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+## 💻 Technical Stack
+
+RealStack is built with a modern technology stack:
+
+### Frontend
+- **Framework**: React with Next.js for server-side rendering
+- **State Management**: Redux with Redux Toolkit
+- **UI Components**: Material-UI with custom theming
+- **Wallet Integration**: Solana wallet adapters (@solana/wallet-adapter)
+- **API Integration**: Axios, SWR for data fetching
+
+### Backend
+- **Runtime**: Node.js with Express.js framework
+- **API Documentation**: OpenAPI (Swagger)
+- **Authentication**: JWT with multi-factor authentication
+- **Database**: PostgreSQL for relational data, Redis for caching
+- **File Storage**: AWS S3 with IPFS integration for decentralized storage
+
+### Blockchain Infrastructure
+- **Primary Network**: Solana (mainnet and devnet)
+- **Smart Contracts**: Rust using Anchor framework
+- **Testing Framework**: Mocha and Chai for unit & integration testing
+- **Token Standard**: SPL Token (Fungible) and Metaplex (NFTs)
+
+## 🚀 Getting Started
 
 ### Prerequisites
-
 - Node.js (v16+)
-- npm (v8+)
-- Rust (v1.65+)
-- Solana CLI (v1.16+)
-- Anchor Framework (v0.27+)
-- A Solana wallet with SOL for transaction fees
+- npm or yarn
+- PostgreSQL (v14+)
+- Solana CLI tools
+- Anchor framework
 
 ### Installation
 
@@ -42,173 +137,95 @@ cd realstack
 # Install dependencies
 npm install
 
-# Configure environment
-cp .env.development .env
-# Edit .env with your configuration
+# Set up environment variables
+cp .env.example .env
+# Edit .env file with your configuration
 
-# Start the development services
-npm start
+# Initialize database
+npm run db:migrate
+
+# Start development server
+npm run dev
 ```
 
-For detailed development instructions, see our [Development Guide](docs/en/development.md).
+## 📊 Core Features
 
-## 🏗️ Architecture
+### Asset Tokenization Flow
 
-RealStack consists of four primary layers working together to provide a complete tokenization ecosystem:
+The RealStack platform follows a comprehensive process for tokenizing real-world assets:
 
-<div align="center">
-  <img src="assets/diagrams/architecture.svg" alt="RealStack Technical Architecture" width="800">
-</div>
+1. **Asset Submission**
+   - Asset owners submit documentation and metadata
+   - Initial validation checks verify completeness
 
-### Frontend Layer
-React-based user interface providing:
-- Asset browsing and discovery
-- Portfolio management dashboard
-- Governance participation interface
-- Wallet integration (Phantom, Solflare)
+2. **Multi-Stage Verification**
+   - Legal verification confirms ownership and compliance
+   - Physical verification (if applicable) validates asset condition
+   - Financial assessment determines accurate valuation
 
-### Backend Layer
-Node.js services handling:
-- User authentication and authorization
-- Asset metadata management
-- Verification workflow orchestration
-- Blockchain transaction preparation
+3. **Tokenization**
+   - Creation of digital token representing the asset
+   - Smart contract deployment with asset parameters
+   - Association of legal documentation with on-chain metadata
 
-### Blockchain Layer
-Solana smart contracts managing:
-- REAL governance token
-- Asset token creation and management
-- Decentralized governance mechanisms
-- Verifier reputation system
+4. **Secondary Market**
+   - Marketplace for trading tokenized assets
+   - Liquidity pools for enabling fractional ownership
+   - Price discovery mechanisms
 
-### Asset Management Layer
-Process-based systems for:
-- Physical asset verification
-- Legal compliance and documentation
-- Income distribution from revenue-generating assets
-- Value assessment and monitoring
+### Governance System
 
-## 📊 Token Economics
+RealStack implements a decentralized governance system:
 
-The REAL token is the governance and utility token of the RealStack platform:
+- **Proposal Creation**: Any token holder can propose changes
+- **Voting Process**: Token-weighted voting on proposals
+- **Execution**: Automatic execution of approved changes
+- **Treasury Management**: Community-controlled funds for development
 
-- **Total Supply**: 100,000,000 REAL
-- **Distribution**:
-  - Community (40%): 40,000,000 REAL
-  - Asset Acquisition Reserve (25%): 25,000,000 REAL
-  - Development Fund (20%): 20,000,000 REAL
-  - Liquidity Provision (10%): 10,000,000 REAL
-  - Team and Advisors (5%): 5,000,000 REAL
+## 🔒 Security Framework
 
-REAL token provides utility for:
-- Platform governance voting
-- Fee discounts for transactions
-- Staking rewards and benefits
-- Verification services
+RealStack prioritizes security at every level:
 
-## 🔍 Asset Verification
+1. **User Security**
+   - Multi-factor authentication
+   - Phishing-resistant methods
+   - Session management
 
-RealStack implements a rigorous multi-stage verification process:
+2. **Data Protection**
+   - End-to-end encryption
+   - Secure key management
+   - Data minimization principles
 
-1. **Initial Submission**: Documentation collection and preliminary review
-2. **Expert Assessment**: Industry-specific expert evaluation
-3. **Valuation Confirmation**: Formal appraisal and value determination
-4. **Legal Verification**: Title, ownership, and compliance check
-5. **Tokenization Approval**: Final review and approval
-6. **Ongoing Verification**: Regular reassessment and updates
+3. **Smart Contract Security**
+   - Formal verification
+   - Multiple independent audits
+   - Bug bounty program
 
-For details, see our [Asset Verification Documentation](docs/en/asset_verification.md).
+4. **Operational Security**
+   - Regular penetration testing
+   - Security incident response plan
+   - Continuous monitoring
 
-## 🏛️ Governance
+## 📖 Documentation
 
-The RealStack governance system enables token holders to participate in platform decision-making:
+Comprehensive documentation is available to help you understand and use RealStack:
 
-- **Proposal Creation**: Submit proposals for platform changes
-- **Discussion Period**: Community deliberation on proposals
-- **Voting Period**: Token-weighted voting on proposals
-- **Execution**: Automatic or manual implementation of approved changes
-
-For details, see our [Governance Framework](docs/en/governance.md).
-
-## 🔌 API Reference
-
-RealStack provides a comprehensive API for developers to build on top of our platform:
-
-```javascript
-// Example: Retrieve asset details
-const { RealStackClient } = require('@realstack/sdk');
-
-const client = new RealStackClient({
-  apiKey: 'your-api-key',
-  environment: 'production'
-});
-
-async function getAssetDetails(assetId) {
-  const asset = await client.assets.get(assetId);
-  console.log(asset);
-}
-```
-
-For complete API documentation, see our [API Reference](docs/en/api_reference.md).
-
-## 📁 Project Structure
-
-```
-RealStack/
-├── apps/                         # Application code
-│   ├── frontend/                 # React frontend
-│   └── backend/                  # Node.js backend
-├── contracts/                    # Solana smart contracts
-├── docs/                         # Documentation
-├── scripts/                      # Utility scripts
-└── shared/                       # Shared libraries and types
-```
-
-## 📅 Roadmap
-
-### Phase 1: Foundation (Q3 2023)
-- ✅ Platform development and security audits
-- ✅ Legal framework establishment
-- ✅ Advisory board formation
-
-### Phase 2: Market Entry (Q4 2023)
-- 🔄 First asset tokenization showcase
-- 🔄 Liquidity incentive program deployment
-- 🔄 Basic governance activation
-
-### Phase 3: Expansion (Q1-Q2 2024)
-- ⏳ Asset category diversification
-- ⏳ Additional trading venue integration
-- ⏳ Cross-chain compatibility
-- ⏳ Enhanced analytics dashboard
-
-### Phase 4: Maturity (Q3 2024-Q2 2025)
-- ⏳ New asset classes governed by community
-- ⏳ Institutional partnerships
-- ⏳ Advanced yield strategies
-- ⏳ Regulated security token offering exploration
-
-## 🛠️ Development
-
-See our [Development Guide](docs/en/development.md) for detailed instructions on setting up your development environment, running tests, and building the application.
+- [User Guide](docs/en/user_guide.md) - For platform users
+- [Developer Documentation](docs/en/development.md) - For developers building on RealStack
+- [API Reference](docs/en/api_reference.md) - Detailed API documentation
+- [Whitepaper](docs/en/whitepaper.md) - Technical overview of the platform
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
+We welcome contributions from the community! Please read our [Contributing Guidelines](CONTRIBUTING.md) for more information on how to get involved.
 
-## ❓ FAQ
+### Development Workflow
 
-### What assets can be tokenized on RealStack?
-RealStack supports various asset classes including real estate, art, vehicles, business equity, collectibles, and more. Each asset class has specific verification requirements.
-
-### How are tokenized assets legally structured?
-Each tokenized asset is typically structured as a Special Purpose Vehicle (SPV) or similar legal entity that holds the asset. Tokens represent ownership shares in this entity.
-
-### What happens if an asset is damaged or destroyed?
-All assets are required to have appropriate insurance coverage. If an asset is damaged or destroyed, the insurance proceeds are distributed to token holders proportionally.
-
-### How are income-generating assets handled?
-For assets that generate income (like rental properties), the income is distributed to token holders on a regular schedule, minus management fees and reserves.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📜 License
 
@@ -219,7 +236,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Website: [realstack.xyz](https://realstack.xyz)
 - Email: info@realstack.xyz
 - Twitter: [@RealStack_xyz](https://x.com/RealStack_xyz)
-
----
 
 Built with ❤️ by the RealStack Team 

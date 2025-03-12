@@ -1,0 +1,230 @@
+# RealStack Security Integration CI/CD Pipeline Configuration
+# Provides automated security checks and pre-deployment security validation
+
+version: 2.1
+
+# Use CircleCI orbs
+orbs:
+  node: circleci/node@4.7
+  docker: circleci/docker@2.1
+  snyk: snyk/snyk@1.1.2
+  owasp: entur/owasp@0.0.10
+
+# Security check configuration
+security_checks:
+  vulnerability_threshold_critical: 0
+  vulnerability_threshold_high: 0
+  vulnerability_threshold_moderate: 5
+
+# Docker image scanning configuration
+docker_scanning:
+  image_name: "realstack/app"
+
+# Other configurations
+other_configs:
+  code_coverage_threshold: 80
+
+# Global cache configuration
+cache_config:
+  npm_cache_key: "npm-cache-v1-{{ checksum \"package-lock.json\" }}"
+  node_modules_path: "./node_modules"
+
+jobs:
+  # Dependency security check
+  dependency_check:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - restore_cache:
+          key: << pipeline.parameters.cache_config.npm_cache_key >>
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run dependency security check
+          command: npx security-ci-cd dependency
+      - save_cache:
+          key: << pipeline.parameters.cache_config.npm_cache_key >>
+          paths:
+            - << pipeline.parameters.cache_config.node_modules_path >>
+      - store_artifacts:
+          path: ./security-reports/dependency-scan*.json
+
+  # Static code analysis
+  static_analysis:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - restore_cache:
+          key: << pipeline.parameters.cache_config.npm_cache_key >>
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run static code analysis
+          command: npx security-ci-cd static-analysis
+      - store_artifacts:
+          path: ./security-reports/static-analysis*.json
+
+  # Secret and credential check
+  secret_check:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - restore_cache:
+          key: << pipeline.parameters.cache_config.npm_cache_key >>
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run secret scanning
+          command: npx security-ci-cd secrets
+      - store_artifacts:
+          path: ./security-reports/secrets-scan*.json
+
+  # Security configuration check
+  config_check:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - restore_cache:
+          key: << pipeline.parameters.cache_config.npm_cache_key >>
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run security configuration check
+          command: npx security-ci-cd configs
+      - store_artifacts:
+          path: ./security-reports/security-config*.json
+
+  # Generated code risk check
+  generated_code_check:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - restore_cache:
+          key: << pipeline.parameters.cache_config.npm_cache_key >>
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run generated code check
+          command: npx security-ci-cd generated-code
+      - store_artifacts:
+          path: ./security-reports/generated-code-scan*.json
+
+  # Docker image security scanning
+  docker_security_scan:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7
+      - run:
+          name: Build Docker image
+          command: docker build -t << pipeline.parameters.docker_scanning.image_name >> .
+      - snyk/scan:
+          docker-image-name: << pipeline.parameters.docker_scanning.image_name >>
+          target-file: "Dockerfile"
+          fail-on-issues: true
+          monitor-on-build: true
+
+  # Build application
+  build_app:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - restore_cache:
+          key: << pipeline.parameters.cache_config.npm_cache_key >>
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Build application
+          command: npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
+            - dist
+            - public
+
+  # Security testing
+  security_testing:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          key: << pipeline.parameters.cache_config.npm_cache_key >>
+      - run:
+          name: Run security tests
+          command: npm run test:security
+      - store_test_results:
+          path: ./test-results/
+      - store_artifacts:
+          path: ./security-reports/security-test*.json
+
+  # OWASP ZAP dynamic security scanning
+  zap_scan:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - setup_remote_docker:
+          version: 20.10.7
+      - run:
+          name: Start application for testing
+          command: npm run start:test
+          background: true
+      - owasp/zap_scan:
+          target: 'http://localhost:3000'
+          fail_on_issues: false
+          cmd_options: '-r -a'
+      - store_artifacts:
+          path: ./zap-scan-results/
+
+workflows:
+  version: 2
+  security_pipeline:
+    jobs:
+      - dependency_check
+      - static_analysis:
+          requires:
+            - dependency_check
+      - secret_check:
+          requires:
+            - dependency_check
+      - config_check:
+          requires:
+            - dependency_check
+      - generated_code_check:
+          requires:
+            - dependency_check
+      - build_app:
+          requires:
+            - static_analysis
+            - secret_check
+            - config_check
+            - generated_code_check
+      - docker_security_scan:
+          requires:
+            - build_app
+      - security_testing:
+          requires:
+            - build_app
+      - zap_scan:
+          requires:
+            - security_testing 
