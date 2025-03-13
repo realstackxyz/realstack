@@ -1,0 +1,194 @@
+# RealStack Falco 安全规则配置
+# 用于容器运行时安全监控
+
+# 基础规则 - 容器异常行为检测
+- rule: 终端Shell在容器中
+  desc: 检测容器中的交互式终端Shell
+  condition: >
+    container.id != "" and
+    proc.name = bash and
+    evt.type = execve and
+    evt.dir=< and
+    (proc.pname=runc or container.id != host)
+  output: >
+    检测到在容器中使用Shell (用户=%user.name 命令=%proc.cmdline 容器=%container.id 镜像=%container.image.repository)
+  priority: NOTICE
+  tags: [container, shell, mitre_execution]
+
+- rule: 容器中的特权提升尝试
+  desc: 检测容器中可能的特权升级尝试
+  condition: >
+    container.id != "" and
+    evt.type=execve and
+    proc.name in (sudo, su)
+  output: >
+    检测到在容器中使用特权提升工具 (用户=%user.name 工具=%proc.name 容器=%container.id 镜像=%container.image.repository)
+  priority: WARNING
+  tags: [container, privilege-escalation, mitre_privilege_escalation]
+
+# 敏感文件访问监控
+- rule: 容器中读取敏感文件
+  desc: 检测容器内对敏感文件的读取尝试
+  condition: >
+    container.id != "" and
+    fd.name startswith /etc and
+    (fd.name in (/etc/shadow, /etc/passwd, /etc/group, /etc/kubernetes/admin.conf, 
+                /etc/kubernetes/scheduler.conf, /etc/kubernetes/controller-manager.conf,
+                /etc/ssl/private) or
+    fd.name glob "/var/lib/kubelet/pki/*" or
+    fd.name glob "/root/.ssh/*" or
+    fd.name glob "/var/run/secrets/kubernetes.io/serviceaccount/*")
+  output: >
+    敏感文件在容器内被访问 (用户=%user.name 文件=%fd.name 容器=%container.id 镜像=%container.image.repository)
+  priority: WARNING
+  tags: [container, sensitive_files, mitre_credential_access]
+
+# 网络异常检测
+- rule: 容器中的异常出站流量
+  desc: 检测容器产生的异常对外连接（SSH/Telnet等）
+  condition: >
+    container.id != "" and
+    outbound and
+    (evt.type=connect or evt.type=sendto) and
+    (fd.sport in (22, 23, 2222) or fd.rport in (22, 23, 2222))
+  output: >
+    容器尝试发起远程访问连接 (用户=%user.name 容器=%container.id 目标=%fd.rip:%fd.rport)
+  priority: WARNING
+  tags: [container, network, mitre_command_and_control]
+
+# RealStack 特定应用规则
+- rule: 未授权修改区块链配置文件
+  desc: 检测对区块链配置文件的未授权修改
+  condition: >
+    container.id != "" and
+    container.image.repository contains "realstack" and
+    (fd.name glob "*/blockchain-config.json" or fd.name glob "*/wallet-config.json") and
+    evt.type in (chmod, rename, open) and
+    evt.arg.flags contains O_TRUNC
+  output: >
+    区块链配置文件被修改 (用户=%user.name 文件=%fd.name 容器=%container.id)
+  priority: CRITICAL
+  tags: [application, blockchain, mitre_tampering]
+
+- rule: 密钥文件导出
+  desc: 检测可能的密钥和凭证导出
+  condition: >
+    container.id != "" and
+    container.image.repository contains "realstack" and
+    (fd.name glob "*/keys/*.pem" or fd.name glob "*/credentials/*.key") and
+    (evt.type=open and evt.arg.flags contains O_RDONLY)
+  output: >
+    密钥文件被访问 (用户=%user.name 文件=%fd.name 容器=%container.id)
+  priority: CRITICAL
+  tags: [credentials, keys, mitre_credential_access]
+
+# 安全扫描工具检测
+- rule: 容器中运行扫描工具
+  desc: 检测在容器中运行端口扫描或漏洞检测工具
+  condition: >
+    container.id != "" and
+    evt.type=execve and
+    proc.name in (nmap, nc, ncat, netcat, ngrep, tcpdump, hydra) or
+    proc.cmdline contains "gobuster" or
+    proc.cmdline contains "dirb" or
+    proc.cmdline contains "nikto"
+  output: >
+    在容器中检测到扫描工具 (用户=%user.name 命令=%proc.cmdline 容器=%container.id)
+  priority: WARNING
+  tags: [container, scanning, mitre_discovery]
+
+# 恶意软件检测
+- rule: 检测加密货币挖矿行为
+  desc: 检测常见的加密货币挖矿进程
+  condition: >
+    container.id != "" and
+    evt.type=execve and
+    (proc.name glob "*xmrig*" or 
+     proc.name glob "*xmr-stak*" or 
+     proc.cmdline glob "*monero*" or
+     proc.cmdline glob "*stratum+tcp*" or
+     proc.cmdline glob "*mining.pool*" or
+     proc.cmdline glob "*pool.minergate*")
+  output: >
+    可能的加密货币挖矿活动 (用户=%user.name 进程=%proc.cmdline 容器=%container.id)
+  priority: CRITICAL
+  tags: [cryptomining, container, mitre_impact]
+
+# 文件系统异常
+- rule: 检测容器中的可疑文件创建
+  desc: 检测在异常位置创建可执行文件
+  condition: >
+    container.id != "" and
+    evt.type in (open, creat, openat) and
+    fd.typechar='f' and
+    (fd.name glob "*/tmp/*.sh" or
+     fd.name glob "*/tmp/*.py" or
+     fd.name glob "*/tmp/*.pl" or
+     fd.name glob "*/dev/shm/*.sh" or
+     fd.name glob "*/run/*.sh") and
+    evt.arg.flags contains O_CREAT
+  output: >
+    在容器临时目录创建可执行脚本 (用户=%user.name 文件=%fd.name 容器=%container.id)
+  priority: WARNING
+  tags: [filesystem, container, mitre_persistence]
+
+# 后门检测
+- rule: 容器中创建反向Shell
+  desc: 检测使用网络工具建立反向Shell的尝试
+  condition: >
+    container.id != "" and
+    evt.type=execve and
+    proc.name in (nc, ncat, netcat) and
+    (proc.cmdline contains "-e /bin/bash" or
+     proc.cmdline contains "-e /bin/sh" or
+     proc.cmdline contains "-e bash" or
+     proc.cmdline contains "-e /bin/zsh")
+  output: >
+    检测到可能的反向Shell (命令=%proc.cmdline 容器=%container.id)
+  priority: CRITICAL
+  tags: [container, reverse-shell, mitre_execution]
+
+# 安全机制绕过检测
+- rule: 尝试禁用安全功能
+  desc: 检测尝试禁用安全工具的行为
+  condition: >
+    container.id != "" and
+    evt.type=execve and
+    (proc.cmdline contains "systemctl stop falco" or
+     proc.cmdline contains "systemctl stop auditd" or
+     proc.cmdline contains "rm -f /etc/cron" or
+     proc.cmdline contains "rm -f /var/log" or
+     proc.cmdline glob "*pkill*falco*" or
+     proc.cmdline glob "*pkill*audit*")
+  output: >
+    尝试禁用安全功能 (用户=%user.name 命令=%proc.cmdline 容器=%container.id)
+  priority: CRITICAL
+  tags: [defense-evasion, container, mitre_defense_evasion]
+
+# RealStack 应用异常
+- rule: 应用程序权限提升
+  desc: 检测应用程序不必要的权限提升
+  condition: >
+    container.id != "" and
+    container.image.repository contains "realstack" and 
+    evt.type=setuid and
+    evt.arg.uid=0
+  output: >
+    RealStack应用程序权限提升到root (进程=%proc.cmdline 容器=%container.id)
+  priority: CRITICAL
+  tags: [application, privilege-escalation, mitre_privilege_escalation]
+
+# 宏观检测: 异常行为序列
+- rule: 可疑入侵序列
+  desc: 检测典型的入侵后行为序列
+  condition: >
+    container.id != "" and 
+    evt.type=execve and
+    (proc.cmdline contains "whoami" or proc.cmdline = "id") and
+    proc.pname in (bash, sh) and
+    proc.aname[2] in (bash, sh) and
+    proc.aname[3] in (bash, sh, python, perl)
+  output: >
+    检测到可疑的命令序列 (进程=%proc.cmdline pparent=%proc.aname[3] 容器=%container.id)
+  priority: WARNING
+  tags: [container, attack-chain, mitre_execution] 

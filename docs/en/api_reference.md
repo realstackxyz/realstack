@@ -750,12 +750,12 @@ async function getAssetDetails(assetId) {
 getAssetDetails('a1b2c3');
 ```
 
-## Support
+## Developer Support
 
-For API support, please contact:
-
-- Email: api-support@realstack.xyz
-- Developer Discord: [RealStack Developers](https://discord.gg/realstack-dev)
+- GitHub Repository: [realstackxyz/realstack](https://github.com/realstackxyz/realstack)
+- SDK Documentation: [SDK Guide](./sdk.md)
+- Developer Discussions: [GitHub Discussions](https://github.com/realstackxyz/realstack/discussions)
+- Contact: developers@realstack.xyz
 
 ## Changelog
 

@@ -182,6 +182,13 @@ The Solana smart contracts are located in the `contracts/` directory:
 - [Governance Framework](governance.md)
 - [Contribution Guidelines](../../CONTRIBUTING.md)
 
+## Support and Resources
+
+- Check the [FAQ](./faq.md) for common questions
+- Open an issue on [GitHub](https://github.com/realstackxyz/realstack/issues) for bug reports
+- Use [GitHub Discussions](https://github.com/realstackxyz/realstack/discussions) for community support
+- Follow us on Twitter [@RealStack_xyz](https://x.com/RealStack_xyz) for updates
+
 ## Troubleshooting
 
 ### Common Issues
@@ -194,5 +201,4 @@ The Solana smart contracts are located in the `contracts/` directory:
 
 ### Getting Help
 
-- Check the GitHub issues for known problems and solutions
-- Join our Discord server for community support 
+- Check the GitHub issues for known problems and solutions 

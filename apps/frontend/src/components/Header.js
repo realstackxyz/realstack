@@ -23,8 +23,10 @@ import {
   KeyboardArrowDown, 
   Close 
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 const Header = ({ isAuthenticated, userProfile, onLogout }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -60,33 +62,33 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
       </Box>
       <List>
         <ListItem button component={Link} to="/" onClick={handleDrawerToggle}>
-          <ListItemText primary="首页" />
+          <ListItemText primary={t('nav.home')} />
         </ListItem>
         <ListItem button component={Link} to="/marketplace" onClick={handleDrawerToggle}>
-          <ListItemText primary="市场" />
+          <ListItemText primary={t('nav.market')} />
         </ListItem>
         <ListItem button component={Link} to="/assets" onClick={handleDrawerToggle}>
-          <ListItemText primary="资产" />
+          <ListItemText primary={t('nav.assets')} />
         </ListItem>
         <ListItem button component={Link} to="/governance" onClick={handleDrawerToggle}>
-          <ListItemText primary="治理" />
+          <ListItemText primary={t('nav.governance')} />
         </ListItem>
         {isAuthenticated ? (
           <>
             <ListItem button component={Link} to="/dashboard" onClick={handleDrawerToggle}>
-              <ListItemText primary="仪表盘" />
+              <ListItemText primary={t('nav.dashboard')} />
             </ListItem>
             <ListItem button onClick={() => { onLogout(); handleDrawerToggle(); }}>
-              <ListItemText primary="登出" />
+              <ListItemText primary={t('nav.logout')} />
             </ListItem>
           </>
         ) : (
           <>
             <ListItem button component={Link} to="/login" onClick={handleDrawerToggle}>
-              <ListItemText primary="登录" />
+              <ListItemText primary={t('nav.login')} />
             </ListItem>
             <ListItem button component={Link} to="/register" onClick={handleDrawerToggle}>
-              <ListItemText primary="注册" />
+              <ListItemText primary={t('nav.register')} />
             </ListItem>
           </>
         )}
@@ -138,7 +140,7 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
               to="/"
               sx={{ mx: 1 }}
             >
-              首页
+              {t('nav.home')}
             </Button>
             
             <Button 
@@ -147,7 +149,7 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
               onClick={handleMarketMenuOpen}
               sx={{ mx: 1 }}
             >
-              市场
+              {t('nav.market')}
             </Button>
             <Menu
               anchorEl={marketAnchorEl}
@@ -159,21 +161,21 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
                 to="/marketplace/real-estate" 
                 onClick={handleMarketMenuClose}
               >
-                房地产
+                {t('market.categories.real_estate')}
               </MenuItem>
               <MenuItem 
                 component={Link} 
                 to="/marketplace/art" 
                 onClick={handleMarketMenuClose}
               >
-                艺术品
+                {t('market.categories.art')}
               </MenuItem>
               <MenuItem 
                 component={Link} 
                 to="/marketplace/collectibles" 
                 onClick={handleMarketMenuClose}
               >
-                收藏品
+                {t('market.categories.collectibles')}
               </MenuItem>
             </Menu>
             
@@ -183,7 +185,7 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
               to="/assets"
               sx={{ mx: 1 }}
             >
-              资产
+              {t('nav.assets')}
             </Button>
             
             <Button 
@@ -192,7 +194,7 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
               to="/governance"
               sx={{ mx: 1 }}
             >
-              治理
+              {t('nav.governance')}
             </Button>
           </Box>
         )}
@@ -207,7 +209,7 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
                   to="/dashboard"
                   sx={{ mx: 1 }}
                 >
-                  仪表盘
+                  {t('nav.dashboard')}
                 </Button>
                 <IconButton
                   edge="end"
@@ -236,17 +238,17 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
                     to="/profile" 
                     onClick={handleMenuClose}
                   >
-                    个人资料
+                    {t('nav.profile')}
                   </MenuItem>
                   <MenuItem 
                     component={Link} 
                     to="/settings" 
                     onClick={handleMenuClose}
                   >
-                    设置
+                    {t('nav.settings')}
                   </MenuItem>
                   <MenuItem onClick={() => { onLogout(); handleMenuClose(); }}>
-                    登出
+                    {t('nav.logout')}
                   </MenuItem>
                 </Menu>
               </>
@@ -258,7 +260,7 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
                   to="/login"
                   sx={{ mx: 1 }}
                 >
-                  登录
+                  {t('nav.login')}
                 </Button>
                 <Button 
                   variant="contained" 
@@ -267,7 +269,7 @@ const Header = ({ isAuthenticated, userProfile, onLogout }) => {
                   to="/register"
                   sx={{ mx: 1 }}
                 >
-                  注册
+                  {t('nav.register')}
                 </Button>
               </>
             )}

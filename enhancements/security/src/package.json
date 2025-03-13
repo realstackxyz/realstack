@@ -1,0 +1,32 @@
+{
+  "name": "realstack-security",
+  "version": "1.0.0",
+  "description": "RealStack Security Module",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/**/*.test.js",
+    "example:crypto": "node examples/crypto-example.js"
+  },
+  "keywords": [
+    "security",
+    "encryption",
+    "authentication",
+    "blockchain"
+  ],
+  "author": "RealStack Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/realstackxyz/realstack"
+  },
+  "homepage": "https://www.realstack.xyz",
+  "bugs": {
+    "url": "https://github.com/realstackxyz/realstack/issues"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0"
+  }
+} 

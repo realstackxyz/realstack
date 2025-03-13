@@ -72,10 +72,9 @@ Any community member holding at least 10,000 REAL tokens can create a proposal b
 
 Each proposal undergoes a 7-day discussion period:
 
-- Community discussion in the forum and Discord
-- Public Q&A sessions with proposal creators
-- Technical reviews for code-related proposals
-- Economic analysis for financial proposals
+- Community discussion in the forum and GitHub Discussions
+- Initial feedback gathering
+- Refinement of proposal
 
 ### 3. Voting Period
 

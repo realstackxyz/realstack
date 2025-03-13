@@ -190,9 +190,9 @@ npm test -- -t "feature name"
 
 ## Community
 
-- Join our [Discord server](https://discord.gg/realstack) for discussions
-- Follow us on [Twitter](https://x.com/RealStack_xyz)
-- Report bugs and request features using GitHub issues
+- Help answer questions in [GitHub Discussions](https://github.com/realstackxyz/realstack/discussions)
+- Follow us on Twitter [@RealStack_xyz](https://x.com/RealStack_xyz)
+- Visit our website at [realstack.xyz](https://www.realstack.xyz)
 
 ---
 

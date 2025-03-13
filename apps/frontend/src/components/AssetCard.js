@@ -2,8 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { formatCurrency } from '../utils/formatting';
+import { useTranslation } from 'react-i18next';
 
 const AssetCard = ({ asset, isConnected }) => {
+  const { t } = useTranslation();
+  
   // Fallback image if asset has no images
   const assetImage = asset.images && asset.images.length > 0
     ? asset.images[0]
@@ -21,7 +24,7 @@ const AssetCard = ({ asset, isConnected }) => {
     <CardContainer to={`/assets/${asset._id}`}>
       <ImageContainer>
         <img src={assetImage} alt={asset.name} />
-        <CategoryBadge>{getCategoryLabel(asset.category)}</CategoryBadge>
+        <CategoryBadge>{getCategoryLabel(asset.category, t)}</CategoryBadge>
       </ImageContainer>
       
       <CardContent>
@@ -37,13 +40,13 @@ const AssetCard = ({ asset, isConnected }) => {
         
         <ValueSection>
           <TotalValue>
-            <Label>Asset Value</Label>
+            <Label>{t('asset.value')}</Label>
             <Value>{formattedValue}</Value>
           </TotalValue>
           
           {asset.tokenized && pricePerToken && (
             <TokenValue>
-              <Label>Price Per Token</Label>
+              <Label>{t('asset.tokenization.pricePerToken')}</Label>
               <Value>{pricePerToken}</Value>
             </TokenValue>
           )}
@@ -51,7 +54,7 @@ const AssetCard = ({ asset, isConnected }) => {
         
         <TagsSection>
           <StatusTag status={asset.status}>
-            {getStatusLabel(asset.status)}
+            {getStatusLabel(asset.status, t)}
           </StatusTag>
           
           {asset.subcategory && (
@@ -61,10 +64,10 @@ const AssetCard = ({ asset, isConnected }) => {
       </CardContent>
       
       <CardFooter>
-        <ViewButton>View Details</ViewButton>
+        <ViewButton>{t('asset.viewDetails')}</ViewButton>
         
         {asset.tokenized && isConnected && (
-          <BuyButton>Invest Now</BuyButton>
+          <BuyButton>{t('asset.invest')}</BuyButton>
         )}
       </CardFooter>
     </CardContainer>
@@ -72,30 +75,20 @@ const AssetCard = ({ asset, isConnected }) => {
 };
 
 // Helper functions
-const getCategoryLabel = (category) => {
-  const labels = {
-    'real-estate': 'Real Estate',
-    'collectible': 'Collectible',
-    'business': 'Business',
-    'vehicle': 'Vehicle',
-    'art': 'Art',
-    'intellectual-property': 'IP',
-    'other': 'Other'
-  };
-  
-  return labels[category] || category;
+const getCategoryLabel = (category, t) => {
+  const categoryKey = category.replace(/-/g, '_');
+  // Try to get translation from i18n, fallback to capitalized category
+  return t(`market.categories.${categoryKey}`, { defaultValue: capitalizeFirstLetter(category.replace(/-/g, ' ')) });
 };
 
-const getStatusLabel = (status) => {
-  const labels = {
-    'pending': 'Pending',
-    'verified': 'Verified',
-    'rejected': 'Rejected',
-    'tokenized': 'Tokenized',
-    'delisted': 'Delisted'
-  };
-  
-  return labels[status] || status;
+const getStatusLabel = (status, t) => {
+  // Try to get status from i18n, fallback to capitalized status
+  return t(`asset.status.${status}`, { defaultValue: capitalizeFirstLetter(status) });
+};
+
+// Utility function to capitalize first letter
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
 // Styled Components

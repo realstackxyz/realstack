@@ -1,0 +1,396 @@
+# RealStack Wazuh 配置文件
+# 用于主机入侵检测和安全监控
+
+# 全局配置
+global:
+  email_notification: 'yes'
+  email_to: 'security-team@realstack.example.com'
+  smtp_server: 'smtp.realstack.example.com'
+  email_from: 'wazuh@realstack.example.com'
+  email_maxperhour: 10
+  email_log_source: 'alert_log'
+  
+# 规则配置
+rules:
+  # 启用默认规则集
+  include:
+    - 'ruleset/rules/0*.xml'
+    - 'ruleset/rules/auditd_rules.xml'
+    - 'ruleset/rules/amazon_rules.xml'
+    - 'ruleset/rules/docker_rules.xml'
+    - 'ruleset/rules/linux_rules.xml'
+    - 'ruleset/rules/nginx_rules.xml'
+    - 'ruleset/rules/nodejs_rules.xml'
+    - 'ruleset/rules/web_rules.xml'
+    - 'ruleset/rules/mongodb_rules.xml'
+    - 'ruleset/rules/ssh_rules.xml'
+    - 'ruleset/rules/postgresql_rules.xml'
+
+  # RealStack 自定义规则
+  path: 'custom_rules/realstack_rules.xml'
+  
+# 告警配置
+alerts:
+  log_alert_level: 3
+  email_alert_level: 10
+  
+  # 使用JSON格式输出告警
+  log_format: json
+  
+  # 自定义告警标题
+  custom_alert_output: >
+    [RealStack Alert] Rule ID: $RULEID - Rule Description: $DESCRIPTION - Level: $LEVEL
+    Timestamp: $DATE
+    Agent: $HOSTNAME ($LOCATION)
+    Source IP: $SRCIP
+    Details: $FULL_LOG
+    
+  # 告警聚合
+  repeated_offenders_timeout: 3600
+  repeated_offenders_threshold: 5
+  
+# 主动响应配置
+active-response:
+  enabled: 'yes'
+  
+  # 针对暴力破解的响应
+  command:
+    name: 'block-ip'
+    executable: 'firewall-drop.sh'
+    timeout: 600
+    expect: 'srcip'
+  location: 'local'
+  level: 9
+  rules_id: '40102, 40103'
+  
+  # 针对恶意软件的响应
+  command:
+    name: 'quarantine-file'
+    executable: 'quarantine.sh'
+    timeout: 0
+    expect: 'filepath'
+  location: 'local'
+  level: 12
+  rules_id: '60120, 60121'
+
+# Syscheck配置 (文件完整性监控)
+syscheck:
+  frequency: 43200 # 12小时
+  scan_on_start: 'yes'
+  auto_ignore: 'no'
+  alert_new_files: 'yes'
+  
+  # 核心配置文件监控
+  directories:
+    - path: '/etc'
+      check_all: 'yes'
+      recursion_level: 2
+      
+    - path: '/usr/bin'
+      check_all: 'yes'
+      
+    - path: '/usr/sbin'
+      check_all: 'yes'
+      
+    - path: '/bin'
+      check_all: 'yes'
+      
+    - path: '/sbin'
+      check_all: 'yes'
+    
+    # RealStack 应用目录
+    - path: '/opt/realstack'
+      check_all: 'yes'
+      recursion_level: 3
+      
+    # 区块链数据目录
+    - path: '/var/lib/realstack/blockchain'
+      check_all: 'yes'
+      report_changes: 'yes'
+      
+    # 钱包设置目录
+    - path: '/etc/realstack/wallet-configs'
+      check_all: 'yes'
+      report_changes: 'yes'
+      real_time: 'yes'
+      
+  # 忽略某些频繁改变的文件
+  ignore:
+    - '/etc/mtab'
+    - '/etc/mnttab'
+    - '/etc/hosts.deny'
+    - '/etc/mail/statistics'
+    - '/etc/random-seed'
+    - '/etc/adjtime'
+    - '/etc/resolv.conf'
+    - '/var/log/*'
+    - '/var/lib/realstack/cache/*'
+
+# Rootcheck配置 (rootkit检测)
+rootcheck:
+  frequency: 43200 # 12小时
+  skip_nfs: 'yes'
+  check_ports: 'yes'
+  check_trojans: 'yes'
+  check_files: 'yes'
+  check_unixaudit: 'yes'
+  
+  # 支持自定义rootkit签名
+  rootkit_files: '/var/ossec/etc/shared/rootkit_files.txt'
+  rootkit_trojans: '/var/ossec/etc/shared/rootkit_trojans.txt'
+  system_audit: '/var/ossec/etc/shared/system_audit_rcl.txt'
+
+# Vulnerability detector
+vulnerability-detector:
+  enabled: 'yes'
+  update_interval: '24h'
+  
+  # 支持的操作系统
+  os:
+    - name: 'ubuntu'
+      interval: '1d'
+      
+    - name: 'amazon'
+      interval: '1d'
+      
+    - name: 'debian'
+      interval: '1d'
+      
+    - name: 'redhat'
+      interval: '1d'
+  
+  # 漏洞严重性评分
+  severity:
+    critical: 9
+    high: 8
+    medium: 5
+    low: 3
+    none: 1
+
+# 日志收集配置
+log-collection:
+  # 系统日志
+  - log_format: 'syslog'
+    location: '/var/log/syslog'
+    
+  - log_format: 'syslog'
+    location: '/var/log/auth.log'
+    
+  # 审计日志
+  - log_format: 'audit'
+    location: '/var/log/audit/audit.log'
+    
+  # Web 服务器日志
+  - log_format: 'apache'
+    location: '/var/log/nginx/access.log'
+    
+  - log_format: 'apache'
+    location: '/var/log/nginx/error.log'
+    
+  # RealStack 应用日志
+  - log_format: 'json'
+    location: '/var/log/realstack/api.log'
+    
+  - log_format: 'json'
+    location: '/var/log/realstack/blockchain.log'
+    
+  - log_format: 'json'
+    location: '/var/log/realstack/transaction.log'
+    
+  - log_format: 'json'
+    location: '/var/log/realstack/security.log'
+    
+  # Docker日志
+  - log_format: 'json'
+    location: '/var/log/docker.log'
+
+# RealStack 自定义解码器
+decoders-path:
+  - 'custom_decoders/realstack_decoders.xml'
+
+# 自定义告警模板
+custom_alert_template: 'templates/realstack_alert_template.html'
+
+# 与 ELK Stack 集成
+integration:
+  elasticsearch:
+    enabled: 'yes'
+    url: 'http://elasticsearch:9200'
+    index: 'wazuh-alerts'
+    username: 'wazuh'
+    password: 'ELASTICSEARCH_PASSWORD'
+    
+  kibana:
+    enabled: 'yes'
+    url: 'http://kibana:5601'
+    app_id: 'wazuh'
+    username: 'wazuh'
+    password: 'KIBANA_PASSWORD'
+
+# RealStack 与Prometheus集成
+prometheus:
+  enabled: 'yes'
+  port: 9100
+  metrics:
+    - alert_count
+    - rule_hit_count
+    - integrity_violations
+    - rootkit_detections
+    - vulnerability_alerts
+    - authentication_failures
+    - network_anomalies
+
+# 自定义RealStack规则文件内容 (XML格式)
+# 保存到 custom_rules/realstack_rules.xml
+custom_rules: |
+  <group name="realstack,blockchain,">
+    <!-- 区块链交易异常规则 -->
+    <rule id="100001" level="10">
+      <decoded_as>json</decoded_as>
+      <field name="log_source">blockchain</field>
+      <field name="event_type">transaction</field>
+      <field name="status">failed</field>
+      <description>RealStack: 区块链交易失败</description>
+      <group>blockchain_error,</group>
+    </rule>
+    
+    <!-- 钱包异常访问规则 -->
+    <rule id="100002" level="12">
+      <decoded_as>json</decoded_as>
+      <field name="log_source">wallet_service</field>
+      <regex type="pcre2">unauthorized_access|brute_force|multiple_failures</regex>
+      <description>RealStack: 钱包服务检测到未授权访问尝试</description>
+      <group>wallet_security,authentication_error,</group>
+    </rule>
+    
+    <!-- API密钥滥用规则 -->
+    <rule id="100003" level="10">
+      <decoded_as>json</decoded_as>
+      <field name="log_source">api_gateway</field>
+      <field name="error_type">api_key_abuse</field>
+      <description>RealStack: API密钥滥用检测</description>
+      <group>api_security,authentication_error,</group>
+    </rule>
+    
+    <!-- 配置文件修改规则 -->
+    <rule id="100004" level="10">
+      <if_sid>550</if_sid> <!-- Syscheck integrity event -->
+      <match>/etc/realstack/|/opt/realstack/config</match>
+      <description>RealStack: 配置文件被修改</description>
+      <group>configuration_change,</group>
+    </rule>
+    
+    <!-- 账户操作异常规则 -->
+    <rule id="100005" level="9">
+      <decoded_as>json</decoded_as>
+      <field name="log_source">user_service</field>
+      <field name="event_type">account_change</field>
+      <field name="priority">high</field>
+      <description>RealStack: 用户账户敏感操作</description>
+      <group>account_management,</group>
+    </rule>
+    
+    <!-- 管理员操作规则 -->
+    <rule id="100006" level="8">
+      <decoded_as>json</decoded_as>
+      <field name="log_source">admin_service</field>
+      <field name="user_role">admin</field>
+      <field name="operation">system_change</field>
+      <description>RealStack: 管理员系统操作</description>
+      <group>admin_activity,</group>
+    </rule>
+    
+    <!-- 支付处理异常规则 -->
+    <rule id="100007" level="11">
+      <decoded_as>json</decoded_as>
+      <field name="log_source">payment_service</field>
+      <field name="status">failed</field>
+      <field name="amount">^[1-9][0-9]{3,}$</field>
+      <description>RealStack: 大额支付失败</description>
+      <group>payment_error,</group>
+    </rule>
+    
+    <!-- 资产挂载异常规则 -->
+    <rule id="100008" level="10">
+      <decoded_as>json</decoded_as>
+      <field name="log_source">asset_service</field>
+      <field name="operation">listing</field>
+      <field name="error_type">valuation_mismatch</field>
+      <description>RealStack: 资产估值异常</description>
+      <group>asset_management,</group>
+    </rule>
+    
+    <!-- 智能合约部署监控 -->
+    <rule id="100009" level="14">
+      <decoded_as>json</decoded_as>
+      <field name="log_source">blockchain</field>
+      <field name="operation">contract_deployment</field>
+      <field name="authorization">false</field>
+      <description>RealStack: 未授权智能合约部署尝试</description>
+      <group>blockchain_security,unauthorized_operation,</group>
+    </rule>
+    
+    <!-- 多因素认证失败 -->
+    <rule id="100010" level="9">
+      <decoded_as>json</decoded_as>
+      <field name="log_source">auth_service</field>
+      <field name="auth_type">mfa</field>
+      <field name="status">failed</field>
+      <field name="failure_count">^[3-9]$</field>
+      <description>RealStack: 多次MFA认证失败</description>
+      <group>authentication_failure,</group>
+    </rule>
+  </group>
+
+# 自定义RealStack解码器 (XML格式)
+# 保存到 custom_decoders/realstack_decoders.xml
+custom_decoders: |
+  <decoder name="realstack-json">
+    <prematch>^{"timestamp":</prematch>
+    <plugin_decoder>JSON</plugin_decoder>
+  </decoder>
+  
+  <decoder name="realstack-blockchain">
+    <parent>realstack-json</parent>
+    <prematch_field>log_source</prematch_field>
+    <prematch>blockchain</prematch>
+    <field name="event_type">event_type</field>
+    <field name="transaction_id">data.transaction_id</field>
+    <field name="wallet_address">data.wallet_address</field>
+    <field name="status">data.status</field>
+    <field name="amount">data.amount</field>
+  </decoder>
+  
+  <decoder name="realstack-wallet">
+    <parent>realstack-json</parent>
+    <prematch_field>log_source</prematch_field>
+    <prematch>wallet_service</prematch>
+    <field name="event_type">event_type</field>
+    <field name="user_id">data.user_id</field>
+    <field name="wallet_id">data.wallet_id</field>
+    <field name="action">data.action</field>
+    <field name="ip_address">data.ip_address</field>
+  </decoder>
+  
+  <decoder name="realstack-api">
+    <parent>realstack-json</parent>
+    <prematch_field>log_source</prematch_field>
+    <prematch>api_gateway</prematch>
+    <field name="method">data.method</field>
+    <field name="path">data.path</field>
+    <field name="status_code">data.status_code</field>
+    <field name="error_type">data.error_type</field>
+    <field name="api_key_id">data.api_key_id</field>
+    <field name="response_time">data.response_time</field>
+  </decoder>
+  
+  <decoder name="realstack-asset">
+    <parent>realstack-json</parent>
+    <prematch_field>log_source</prematch_field>
+    <prematch>asset_service</prematch>
+    <field name="operation">data.operation</field>
+    <field name="asset_id">data.asset_id</field>
+    <field name="user_id">data.user_id</field>
+    <field name="error_type">data.error_type</field>
+    <field name="asset_value">data.asset_value</field>
+  </decoder> 

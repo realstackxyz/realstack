@@ -1,0 +1,265 @@
+groups:
+- name: realstack-security-alerts
+  rules:
+  
+  # API安全告警
+  - alert: HighRateOfFailedAPIRequests
+    expr: sum(rate(http_requests_total{status_code=~"4.."}[5m])) by (route) / sum(rate(http_requests_total[5m])) by (route) > 0.3
+    for: 3m
+    labels:
+      severity: warning
+      category: security
+    annotations:
+      summary: "API路径 {{ $labels.route }} 的高失败率"
+      description: "API路径 {{ $labels.route }} 在过去5分钟内的失败率超过30%，可能表明有攻击或滥用。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/api-failure-spikes"
+  
+  - alert: APIRateLimitExceeded
+    expr: sum(rate(http_requests_total{status_code="429"}[5m])) by (route) > 10
+    for: 2m
+    labels:
+      severity: warning
+      category: security
+    annotations:
+      summary: "API路径 {{ $labels.route }} 超出速率限制"
+      description: "API路径 {{ $labels.route }} 在过去5分钟内每秒平均有超过10个请求触发了速率限制。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/api-rate-limit-exceeded"
+  
+  - alert: UnusualAPIAccessPattern
+    expr: sum(rate(http_requests_total{method="GET", route=~"/api/(admin|restricted)/.*"}[5m])) by (route) > 50
+    for: 5m
+    labels:
+      severity: warning
+      category: security
+    annotations:
+      summary: "管理API路径 {{ $labels.route }} 的异常访问模式"
+      description: "检测到管理API路径 {{ $labels.route }} 的高访问率，可能表示未授权访问尝试。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/unusual-admin-api-access"
+  
+  # 认证安全告警
+  - alert: HighRateOfAuthFailures
+    expr: sum(rate(auth_failures_total[5m])) > 30
+    for: 3m
+    labels:
+      severity: critical
+      category: security
+    annotations:
+      summary: "高认证失败率"
+      description: "在过去5分钟内检测到高认证失败率，可能正在进行暴力破解攻击。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/auth-attack-response"
+  
+  - alert: CredentialStuffingDetected
+    expr: sum(rate(auth_failures_total{reason="invalid_password"}[5m])) by (user_id) > 5
+    for: 2m
+    labels:
+      severity: critical
+      category: security
+    annotations:
+      summary: "用户 {{ $labels.user_id }} 可能遭遇凭证填充攻击"
+      description: "用户 {{ $labels.user_id }} 在过去5分钟内有多次密码错误，可能遭遇凭证填充攻击。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/credential-stuffing"
+  
+  - alert: MFABypassAttempts
+    expr: sum(rate(mfa_bypass_attempts_total[10m])) > 0
+    for: 1m
+    labels:
+      severity: critical
+      category: security
+    annotations:
+      summary: "检测到MFA绕过尝试"
+      description: "在过去10分钟内检测到MFA绕过尝试，这是严重的安全问题。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/mfa-bypass-response"
+  
+  # 区块链安全告警
+  - alert: UnauthorizedContractDeployment
+    expr: sum(unauthorized_contract_deployment_attempts_total[10m]) > 0
+    for: 1m
+    labels:
+      severity: critical
+      category: blockchain_security
+    annotations:
+      summary: "检测到未授权智能合约部署尝试"
+      description: "在过去10分钟内检测到未授权智能合约部署尝试，可能是安全漏洞或内部威胁。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/unauthorized-contract-deployment"
+  
+  - alert: BlockchainNodeSyncIssue
+    expr: max without(instance) (time() - blockchain_node_last_block_time) > 900
+    for: 15m
+    labels:
+      severity: critical
+      category: blockchain_security
+    annotations:
+      summary: "区块链节点同步问题"
+      description: "区块链节点超过15分钟未同步新区块，可能导致交易安全问题。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/blockchain-node-sync-issues"
+  
+  - alert: AbnormalTransactionSpike
+    expr: sum(rate(transactions_total[5m])) > historic_max_transactions_rate * 2
+    for: 5m
+    labels:
+      severity: warning
+      category: blockchain_security
+    annotations:
+      summary: "检测到异常交易峰值"
+      description: "交易率超过历史最大值的两倍，可能表明存在协议攻击或异常活动。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/abnormal-transaction-spikes"
+  
+  # 钱包安全告警
+  - alert: WalletWithdrawalAnomaly
+    expr: sum(rate(wallet_withdrawals_total{amount > 10000}[10m])) by (wallet_address) > 3
+    for: 5m
+    labels:
+      severity: critical
+      category: wallet_security
+    annotations:
+      summary: "钱包地址 {{ $labels.wallet_address }} 的异常提款"
+      description: "钱包地址 {{ $labels.wallet_address }} 在过去10分钟内执行了多笔大额提款，可能表明安全风险。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/wallet-withdrawal-anomalies"
+  
+  - alert: MultipleFailedWalletOperations
+    expr: sum(rate(wallet_operations_failed_total[5m])) by (wallet_address, operation_type) > 5
+    for: 3m
+    labels:
+      severity: warning
+      category: wallet_security
+    annotations:
+      summary: "钱包地址 {{ $labels.wallet_address }} 的多次操作失败"
+      description: "钱包地址 {{ $labels.wallet_address }} 的 {{ $labels.operation_type }} 操作在过去5分钟内多次失败。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/failed-wallet-operations"
+  
+  # 服务器安全告警
+  - alert: HighCPUUsageSustained
+    expr: avg without(cpu) (rate(node_cpu_seconds_total{mode!="idle"}[5m])) > 0.9
+    for: 15m
+    labels:
+      severity: warning
+      category: infrastructure_security
+    annotations:
+      summary: "节点 {{ $labels.instance }} 的持续高CPU使用率"
+      description: "节点 {{ $labels.instance }} 在过去15分钟内CPU使用率超过90%，可能表明DoS攻击或资源耗尽。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/high-cpu-usage"
+  
+  - alert: UnexpectedProcessExecuted
+    expr: count(process_exec_count{process=~"nc|ncat|wget|curl|nmap"} > 0) > 0
+    for: 1m
+    labels:
+      severity: critical
+      category: infrastructure_security
+    annotations:
+      summary: "节点 {{ $labels.instance }} 执行了意外进程"
+      description: "在节点 {{ $labels.instance }} 上检测到可疑进程 {{ $labels.process }} 的执行。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/unexpected-process-execution"
+  
+  - alert: SSHLoginFromUnusualLocation
+    expr: ssh_login_geo_anomaly > 0
+    for: 1m
+    labels:
+      severity: critical
+      category: infrastructure_security
+    annotations:
+      summary: "从异常位置登录SSH"
+      description: "检测到来自 {{ $labels.country }} 的异常SSH登录尝试，这与常见的管理员位置不符。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/unusual-ssh-logins"
+  
+  # 数据库安全告警
+  - alert: DatabaseCredentialScanningDetected
+    expr: sum(rate(db_auth_failures_total[5m])) > 20
+    for: 3m
+    labels:
+      severity: critical
+      category: database_security
+    annotations:
+      summary: "检测到数据库凭证扫描"
+      description: "在过去5分钟内检测到大量数据库认证失败，可能是凭证扫描攻击。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/database-credential-scanning"
+  
+  - alert: DatabaseAnomalousQueryPattern
+    expr: sum(rate(db_anomalous_queries_total[5m])) > 0
+    for: 2m
+    labels:
+      severity: critical
+      category: database_security
+    annotations:
+      summary: "检测到异常数据库查询模式"
+      description: "在过去5分钟内检测到异常数据库查询模式，可能是SQL注入或未授权访问尝试。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/anomalous-query-patterns"
+  
+  # WAF安全告警
+  - alert: WAFBlockedRequestsSpike
+    expr: sum(rate(waf_blocked_requests_total[5m])) > 50
+    for: 3m
+    labels:
+      severity: warning
+      category: waf_security
+    annotations:
+      summary: "WAF阻止请求高峰"
+      description: "在过去5分钟内检测到WAF阻止请求的高峰，可能表明协调攻击。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/waf-blocked-requests-spike"
+  
+  - alert: SQLInjectionAttemptsDetected
+    expr: sum(rate(waf_blocked_requests_total{rule_category="sql_injection"}[5m])) > 10
+    for: 2m
+    labels:
+      severity: critical
+      category: waf_security
+    annotations:
+      summary: "检测到SQL注入攻击尝试"
+      description: "在过去5分钟内检测到多次SQL注入攻击尝试。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/sql-injection-response"
+  
+  - alert: CrossSiteScriptingAttemptsDetected
+    expr: sum(rate(waf_blocked_requests_total{rule_category="xss"}[5m])) > 10
+    for: 2m
+    labels:
+      severity: critical
+      category: waf_security
+    annotations:
+      summary: "检测到跨站脚本攻击尝试"
+      description: "在过去5分钟内检测到多次跨站脚本(XSS)攻击尝试。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/xss-response"
+  
+  # 综合安全告警
+  - alert: MultipleSecurityIncidents
+    expr: count(ALERTS{severity="critical", category=~".*security"}) > 3
+    for: 5m
+    labels:
+      severity: critical
+      category: security_incident
+    annotations:
+      summary: "检测到多个安全事件"
+      description: "在过去5分钟内激活了3个以上的关键安全警报，表明可能存在协调攻击。启动安全事件响应计划。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/multiple-security-incidents"
+  
+  - alert: SecurityComponentDown
+    expr: up{job=~"wazuh|falco|modsecurity|suricata"} == 0
+    for: 5m
+    labels:
+      severity: critical
+      category: security_infrastructure
+    annotations:
+      summary: "安全组件 {{ $labels.job }} 已离线"
+      description: "安全组件 {{ $labels.job }} 已离线超过5分钟，这可能导致安全覆盖范围出现缺口。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/security-component-outage"
+      
+  # 异常用户行为检测
+  - alert: UserLoginFromMultipleLocations
+    expr: count by(user_id) (count by(user_id, country) (user_login_success_total)) > 3
+    for: 30m
+    labels:
+      severity: warning
+      category: user_security
+    annotations:
+      summary: "用户 {{ $labels.user_id }} 从多个国家/地区登录"
+      description: "用户 {{ $labels.user_id }} 在30分钟内从3个以上不同国家/地区登录，可能表明账户被盗用。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/multiple-location-logins"
+  
+  - alert: UnusualUserActivity
+    expr: sum(rate(user_activity_anomaly_score[10m])) by (user_id) > 0.8
+    for: 5m
+    labels:
+      severity: warning
+      category: user_security
+    annotations:
+      summary: "用户 {{ $labels.user_id }} 的异常活动模式"
+      description: "用户 {{ $labels.user_id }} 展示出与其正常行为显著偏离的活动模式。"
+      runbook_url: "https://wiki.realstack.example.com/runbooks/security/unusual-user-activity" 

@@ -2,95 +2,96 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useTranslation } from 'react-i18next';
 
 const HomePage = () => {
   const { connected } = useWallet();
+  const { t } = useTranslation();
 
   return (
     <HomeContainer>
       <HeroSection>
         <HeroContent>
           <HeroTitle>
-            Tokenize Real-World Assets on <Highlight>Solana</Highlight>
+            {t('home.hero.title')} <Highlight>Solana</Highlight>
           </HeroTitle>
           <HeroSubtitle>
-            RealStack bridges physical assets to blockchain, creating a more accessible, 
-            transparent, and efficient marketplace for tokenized real-world assets.
+            {t('home.hero.subtitle')}
           </HeroSubtitle>
           <ButtonGroup>
             <PrimaryButton as={Link} to="/marketplace">
-              Explore Assets
+              {t('home.buttons.exploreAssets')}
             </PrimaryButton>
             {connected ? (
               <SecondaryButton as={Link} to="/dashboard">
-                My Portfolio
+                {t('home.buttons.myPortfolio')}
               </SecondaryButton>
             ) : (
               <SecondaryButton as={Link} to="/learn">
-                Learn More
+                {t('home.buttons.learnMore')}
               </SecondaryButton>
             )}
           </ButtonGroup>
         </HeroContent>
         <HeroImageContainer>
-          <img src="/assets/images/hero-image.svg" alt="Tokenized Assets" />
+          <img src="/assets/images/hero-image.svg" alt={t('home.hero.imageAlt')} />
         </HeroImageContainer>
       </HeroSection>
 
       <FeaturesSection>
-        <SectionTitle>Why Choose RealStack</SectionTitle>
+        <SectionTitle>{t('home.features.title')}</SectionTitle>
         <FeatureCards>
           <FeatureCard>
             <FeatureIcon>
-              <img src="/assets/icons/accessibility.svg" alt="Accessibility" />
+              <img src="/assets/icons/accessibility.svg" alt={t('home.features.accessibility.title')} />
             </FeatureIcon>
-            <FeatureTitle>Accessibility</FeatureTitle>
+            <FeatureTitle>{t('home.features.accessibility.title')}</FeatureTitle>
             <FeatureDescription>
-              Invest in premium real-world assets with minimal entry barriers and fractional ownership.
+              {t('home.features.accessibility.description')}
             </FeatureDescription>
           </FeatureCard>
           
           <FeatureCard>
             <FeatureIcon>
-              <img src="/assets/icons/liquidity.svg" alt="Liquidity" />
+              <img src="/assets/icons/liquidity.svg" alt={t('home.features.enhancedLiquidity.title')} />
             </FeatureIcon>
-            <FeatureTitle>Enhanced Liquidity</FeatureTitle>
+            <FeatureTitle>{t('home.features.enhancedLiquidity.title')}</FeatureTitle>
             <FeatureDescription>
-              Easily buy, sell, or trade asset tokens on Solana with low fees and rapid settlement.
+              {t('home.features.enhancedLiquidity.description')}
             </FeatureDescription>
           </FeatureCard>
           
           <FeatureCard>
             <FeatureIcon>
-              <img src="/assets/icons/transparency.svg" alt="Transparency" />
+              <img src="/assets/icons/transparency.svg" alt={t('home.features.transparency.title')} />
             </FeatureIcon>
-            <FeatureTitle>Transparency</FeatureTitle>
+            <FeatureTitle>{t('home.features.transparency.title')}</FeatureTitle>
             <FeatureDescription>
-              Verified assets with detailed documentation and transparent ownership history.
+              {t('home.features.transparency.description')}
             </FeatureDescription>
           </FeatureCard>
           
           <FeatureCard>
             <FeatureIcon>
-              <img src="/assets/icons/governance.svg" alt="Governance" />
+              <img src="/assets/icons/governance.svg" alt={t('home.features.governance.title')} />
             </FeatureIcon>
-            <FeatureTitle>Community Governance</FeatureTitle>
+            <FeatureTitle>{t('home.features.governance.title')}</FeatureTitle>
             <FeatureDescription>
-              Participate in key decisions through the REAL token governance system.
+              {t('home.features.governance.description')}
             </FeatureDescription>
           </FeatureCard>
         </FeatureCards>
       </FeaturesSection>
 
       <AssetCategoriesSection>
-        <SectionTitle>Asset Categories</SectionTitle>
+        <SectionTitle>{t('home.categories.title')}</SectionTitle>
         <CategoryCards>
           <CategoryCard to="/marketplace?category=real-estate">
             <CategoryBackground bgImage="/assets/images/real-estate.jpg" />
             <CategoryContent>
-              <CategoryTitle>Real Estate</CategoryTitle>
+              <CategoryTitle>{t('market.categories.real_estate')}</CategoryTitle>
               <CategoryDescription>
-                Commercial properties, residential units, and land investments
+                {t('home.categories.realEstate.description')}
               </CategoryDescription>
             </CategoryContent>
           </CategoryCard>
@@ -98,9 +99,9 @@ const HomePage = () => {
           <CategoryCard to="/marketplace?category=business">
             <CategoryBackground bgImage="/assets/images/business.jpg" />
             <CategoryContent>
-              <CategoryTitle>Business</CategoryTitle>
+              <CategoryTitle>{t('market.categories.business')}</CategoryTitle>
               <CategoryDescription>
-                Small business equity, revenue shares, and franchise opportunities
+                {t('home.categories.business.description')}
               </CategoryDescription>
             </CategoryContent>
           </CategoryCard>
@@ -108,28 +109,27 @@ const HomePage = () => {
           <CategoryCard to="/marketplace?category=collectible">
             <CategoryBackground bgImage="/assets/images/collectibles.jpg" />
             <CategoryContent>
-              <CategoryTitle>Collectibles</CategoryTitle>
+              <CategoryTitle>{t('market.categories.collectible')}</CategoryTitle>
               <CategoryDescription>
-                High-value art, rare items, and premium collectibles
+                {t('home.categories.collectible.description')}
               </CategoryDescription>
             </CategoryContent>
           </CategoryCard>
         </CategoryCards>
         <ViewAllButton as={Link} to="/marketplace">
-          View All Categories
+          {t('home.categories.viewAll')}
         </ViewAllButton>
       </AssetCategoriesSection>
 
       <HowItWorksSection>
-        <SectionTitle>How It Works</SectionTitle>
+        <SectionTitle>{t('home.howItWorks.title')}</SectionTitle>
         <StepsContainer>
           <Step>
             <StepNumber>1</StepNumber>
             <StepContent>
-              <StepTitle>Asset Verification</StepTitle>
+              <StepTitle>{t('home.howItWorks.steps.verification.title')}</StepTitle>
               <StepDescription>
-                Each asset undergoes thorough verification, including legal ownership confirmation, 
-                professional valuation, and compliance screening.
+                {t('home.howItWorks.steps.verification.description')}
               </StepDescription>
             </StepContent>
           </Step>
@@ -137,10 +137,9 @@ const HomePage = () => {
           <Step>
             <StepNumber>2</StepNumber>
             <StepContent>
-              <StepTitle>Tokenization</StepTitle>
+              <StepTitle>{t('home.howItWorks.steps.tokenization.title')}</StepTitle>
               <StepDescription>
-                Assets are converted into digital tokens on the Solana blockchain, 
-                representing fractional ownership with appropriate legal structuring.
+                {t('home.howItWorks.steps.tokenization.description')}
               </StepDescription>
             </StepContent>
           </Step>
@@ -148,10 +147,9 @@ const HomePage = () => {
           <Step>
             <StepNumber>3</StepNumber>
             <StepContent>
-              <StepTitle>Distribution</StepTitle>
+              <StepTitle>{t('home.howItWorks.steps.distribution.title')}</StepTitle>
               <StepDescription>
-                Tokens are made available to investors through our marketplace, 
-                with transparent pricing and accessibility.
+                {t('home.howItWorks.steps.distribution.description')}
               </StepDescription>
             </StepContent>
           </Step>
@@ -159,10 +157,9 @@ const HomePage = () => {
           <Step>
             <StepNumber>4</StepNumber>
             <StepContent>
-              <StepTitle>Management & Returns</StepTitle>
+              <StepTitle>{t('home.howItWorks.steps.management.title')}</StepTitle>
               <StepDescription>
-                Assets are professionally managed, with returns and income distributed 
-                to token holders according to their ownership stake.
+                {t('home.howItWorks.steps.management.description')}
               </StepDescription>
             </StepContent>
           </Step>
@@ -171,16 +168,16 @@ const HomePage = () => {
 
       <CtaSection>
         <CtaContent>
-          <CtaTitle>Ready to Start Investing in Real-World Assets?</CtaTitle>
+          <CtaTitle>{t('home.cta.title')}</CtaTitle>
           <CtaText>
-            Join the RealStack platform today and access a diverse portfolio of tokenized assets.
+            {t('home.cta.text')}
           </CtaText>
           <CtaButtonGroup>
             <PrimaryButton as={Link} to="/marketplace">
-              Explore Assets
+              {t('home.buttons.exploreAssets')}
             </PrimaryButton>
             <SecondaryButton as={Link} to="/learn">
-              Learn More
+              {t('home.buttons.learnMore')}
             </SecondaryButton>
           </CtaButtonGroup>
         </CtaContent>

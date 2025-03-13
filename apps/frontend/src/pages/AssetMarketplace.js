@@ -3,6 +3,7 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import AssetCard from '../components/AssetCard';
@@ -15,6 +16,8 @@ import ErrorMessage from '../components/ErrorMessage';
 import { API_URL } from '../config/constants';
 
 const AssetMarketplace = () => {
+  const { t } = useTranslation();
+  
   // State
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,14 +70,14 @@ const AssetMarketplace = () => {
         });
       } catch (err) {
         console.error('Error fetching assets:', err);
-        setError('Failed to load assets. Please try again later.');
+        setError(t('errors.failedToLoadAssets'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchAssets();
-  }, [filters, pagination.page, pagination.limit]);
+  }, [filters, pagination.page, pagination.limit, t]);
 
   // Handle filter changes
   const handleFilterChange = (newFilters) => {
@@ -99,8 +102,8 @@ const AssetMarketplace = () => {
   return (
     <MarketplaceContainer>
       <MarketplaceHeader>
-        <h1>Asset Marketplace</h1>
-        <p>Discover and invest in tokenized real-world assets</p>
+        <h1>{t('market.title')}</h1>
+        <p>{t('market.description')}</p>
       </MarketplaceHeader>
 
       <FilterContainer>
@@ -120,18 +123,23 @@ const AssetMarketplace = () => {
       ) : (
         <>
           <ResultsInfo>
-            <span>Showing {assets.length} of {pagination.total} assets</span>
+            <span>
+              {t('market.results.showing', {
+                visible: assets.length,
+                total: pagination.total
+              })}
+            </span>
             {wallet.connected && (
               <Button as={Link} to="/dashboard">
-                View My Portfolio
+                {t('market.viewPortfolio')}
               </Button>
             )}
           </ResultsInfo>
 
           {assets.length === 0 ? (
             <NoAssetsMessage>
-              <h3>No assets found matching your criteria</h3>
-              <p>Try adjusting your filters or check back later for new listings</p>
+              <h3>{t('market.search.noResults')}</h3>
+              <p>{t('market.search.adjustFilters')}</p>
             </NoAssetsMessage>
           ) : (
             <AssetsGrid>

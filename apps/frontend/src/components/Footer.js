@@ -1,56 +1,54 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { 
   Box, 
   Container, 
   Grid, 
   Typography, 
-  IconButton, 
-  Divider,
-  useTheme,
-  useMediaQuery
+  Link, 
+  IconButton,
+  useMediaQuery 
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 import { 
   Twitter as TwitterIcon, 
-  Telegram as TelegramIcon, 
   GitHub as GitHubIcon, 
-  LinkedIn as LinkedInIcon,
-  Discord as DiscordIcon
+  LinkedIn as LinkedInIcon, 
+  Telegram as TelegramIcon
 } from '@mui/icons-material';
+import Logo from './Logo';
+
+// Get current year for copyright notice
+const currentYear = new Date().getFullYear();
 
 const Footer = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  const currentYear = new Date().getFullYear();
+  const { t } = useTranslation();
   
   return (
     <Box 
       component="footer" 
       sx={{ 
         bgcolor: 'background.paper',
-        pt: 6,
-        pb: 3,
-        mt: 'auto',
-        borderTop: 1,
+        py: 6, 
+        borderTop: 1, 
         borderColor: 'divider'
       }}
     >
       <Container maxWidth="lg">
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <img 
-                src="/logo.svg" 
-                alt="RealStack Logo" 
-                style={{ height: 40, marginRight: 8 }} 
+          {/* Company Information */}
+          <Grid item xs={12} md={4}>
+            <Box mb={2}>
+              <Logo 
+                sx={{ height: 40 }}
+                alt="RealStack Logo"
               />
-              <Typography variant="h6" color="text.primary">
+              <Typography variant="h6" color="text.primary" gutterBottom sx={{ display: 'inline-block', ml: 1 }}>
                 RealStack
               </Typography>
             </Box>
             <Typography variant="body2" color="text.secondary" paragraph>
-              区块链资产通证化平台，连接现实世界与数字经济。
+              {t('footer.tagline')}
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <IconButton 
@@ -63,18 +61,9 @@ const Footer = () => {
                 <TwitterIcon />
               </IconButton>
               <IconButton 
-                aria-label="Discord" 
-                component="a" 
-                href="https://discord.gg/realstack" 
-                target="_blank"
-                size="small"
-              >
-                <DiscordIcon />
-              </IconButton>
-              <IconButton 
                 aria-label="GitHub" 
                 component="a" 
-                href="https://github.com/RealStack-xyz" 
+                href="https://github.com/realstackxyz/realstack" 
                 target="_blank"
                 size="small"
               >
@@ -100,150 +89,121 @@ const Footer = () => {
               </IconButton>
             </Box>
           </Grid>
-          
+
+          {/* Resources Links */}
           <Grid item xs={6} sm={3} md={2}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom>
-              产品
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              {t('footer.resources')}
             </Typography>
-            <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none' }}>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/marketplace" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">市场</Typography>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              <li>
+                <Link href="/docs" color="text.secondary" underline="hover">
+                  {t('footer.documentation')}
                 </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/assets" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">资产</Typography>
+              </li>
+              <li>
+                <Link href="/faq" color="text.secondary" underline="hover">
+                  {t('footer.faq')}
                 </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/governance" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">治理</Typography>
+              </li>
+              <li>
+                <Link href="/api" color="text.secondary" underline="hover">
+                  {t('footer.api')}
                 </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/tokenomics" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">代币经济</Typography>
+              </li>
+              <li>
+                <Link href="/tutorials" color="text.secondary" underline="hover">
+                  {t('footer.tutorials')}
                 </Link>
-              </Box>
-            </Box>
+              </li>
+            </ul>
           </Grid>
-          
+
+          {/* Company Links */}
           <Grid item xs={6} sm={3} md={2}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom>
-              资源
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              {t('footer.company')}
             </Typography>
-            <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none' }}>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/docs" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">文档</Typography>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              <li>
+                <Link href="/about" color="text.secondary" underline="hover">
+                  {t('footer.about')}
                 </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/whitepaper" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">白皮书</Typography>
+              </li>
+              <li>
+                <Link href="/team" color="text.secondary" underline="hover">
+                  {t('footer.team')}
                 </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/api" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">API</Typography>
+              </li>
+              <li>
+                <Link href="/careers" color="text.secondary" underline="hover">
+                  {t('footer.careers')}
                 </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/faq" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">常见问题</Typography>
+              </li>
+              <li>
+                <Link href="/press" color="text.secondary" underline="hover">
+                  {t('footer.press')}
                 </Link>
-              </Box>
-            </Box>
+              </li>
+            </ul>
           </Grid>
-          
+
+          {/* Legal Links */}
           <Grid item xs={6} sm={3} md={2}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom>
-              公司
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              {t('footer.legal')}
             </Typography>
-            <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none' }}>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/about" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">关于我们</Typography>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              <li>
+                <Link href="/terms" color="text.secondary" underline="hover">
+                  {t('footer.terms')}
                 </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/careers" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">招贤纳士</Typography>
+              </li>
+              <li>
+                <Link href="/privacy" color="text.secondary" underline="hover">
+                  {t('footer.privacy')}
                 </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/contact" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">联系我们</Typography>
+              </li>
+              <li>
+                <Link href="/cookies" color="text.secondary" underline="hover">
+                  {t('footer.cookies')}
                 </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/blog" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">博客</Typography>
+              </li>
+              <li>
+                <Link href="/licenses" color="text.secondary" underline="hover">
+                  {t('footer.licenses')}
                 </Link>
-              </Box>
-            </Box>
+              </li>
+            </ul>
           </Grid>
-          
-          <Grid item xs={6} sm={3} md={3}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom>
-              法律
+
+          {/* Contact Info */}
+          <Grid item xs={6} sm={3} md={2}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              {t('footer.contact')}
             </Typography>
-            <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none' }}>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/terms" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">服务条款</Typography>
-                </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/privacy" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">隐私政策</Typography>
-                </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/compliance" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">合规</Typography>
-                </Link>
-              </Box>
-              <Box component="li" sx={{ py: 0.5 }}>
-                <Link to="/security" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-                  <Typography variant="body2">安全</Typography>
-                </Link>
-              </Box>
-            </Box>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              info@realstack.xyz
+            </Typography>
+          </Grid>
+
+          {/* Footer Copyright */}
+          <Grid item xs={12}>
+            <Typography 
+              variant="body2" 
+              color="text.secondary" 
+              align="center"
+              sx={{ 
+                borderTop: 1, 
+                borderColor: 'divider', 
+                pt: 3, 
+                mt: 3 
+              }}
+            >
+              © {currentYear} RealStack. {t('footer.copyright')}
+            </Typography>
           </Grid>
         </Grid>
-        
-        <Divider sx={{ my: 3 }} />
-        
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: isMobile ? 'column' : 'row',
-          justifyContent: 'space-between',
-          alignItems: isMobile ? 'center' : 'flex-start',
-          gap: 2
-        }}>
-          <Typography variant="body2" color="text.secondary">
-            © {currentYear} RealStack. 保留所有权利。
-          </Typography>
-          
-          <Box sx={{ 
-            display: 'flex', 
-            gap: 3,
-            flexWrap: 'wrap',
-            justifyContent: isMobile ? 'center' : 'flex-end'
-          }}>
-            <Link to="/terms" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-              <Typography variant="body2">服务条款</Typography>
-            </Link>
-            <Link to="/privacy" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-              <Typography variant="body2">隐私政策</Typography>
-            </Link>
-            <Link to="/cookies" style={{ textDecoration: 'none', color: 'text.secondary' }}>
-              <Typography variant="body2">Cookie 政策</Typography>
-            </Link>
-          </Box>
-        </Box>
       </Container>
     </Box>
   );

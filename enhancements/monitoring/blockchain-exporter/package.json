@@ -1,0 +1,26 @@
+{
+  "name": "realstack-blockchain-exporter",
+  "version": "1.0.0",
+  "description": "Blockchain metrics exporter for RealStack platform",
+  "main": "BlockchainExporter.js",
+  "scripts": {
+    "start": "node BlockchainExporter.js",
+    "dev": "nodemon BlockchainExporter.js",
+    "test": "jest"
+  },
+  "author": "RealStack Team",
+  "license": "MIT",
+  "dependencies": {
+    "@solana/web3.js": "^1.73.0",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.7",
+    "prom-client": "^14.1.1"
+  },
+  "devDependencies": {
+    "jest": "^29.4.1",
+    "nodemon": "^2.0.20"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 

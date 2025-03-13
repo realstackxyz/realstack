@@ -1,0 +1,201 @@
+{
+  "index_patterns": ["realstack-*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 3,
+      "number_of_replicas": 1,
+      "index.refresh_interval": "5s",
+      "index.mapping.total_fields.limit": 2000,
+      "index.mapping.ignore_malformed": true,
+      "analysis": {
+        "analyzer": {
+          "realstack_analyzer": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": ["lowercase", "asciifolding"]
+          },
+          "path_analyzer": {
+            "tokenizer": "path_tokenizer"
+          }
+        },
+        "tokenizer": {
+          "path_tokenizer": {
+            "type": "path_hierarchy",
+            "delimiter": "/"
+          }
+        }
+      }
+    },
+    "mappings": {
+      "dynamic_templates": [
+        {
+          "strings_as_keywords": {
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "keyword",
+              "ignore_above": 1024,
+              "fields": {
+                "text": {
+                  "type": "text",
+                  "analyzer": "realstack_analyzer",
+                  "norms": false
+                }
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "environment": {
+          "type": "keyword"
+        },
+        "service": {
+          "type": "keyword"
+        },
+        "log_level": {
+          "type": "keyword"
+        },
+        "log_message": {
+          "type": "text",
+          "analyzer": "realstack_analyzer",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "trace_id": {
+          "type": "keyword"
+        },
+        "log_fingerprint": {
+          "type": "keyword"
+        },
+        "application": {
+          "type": "keyword"
+        },
+        "geoip": {
+          "dynamic": true,
+          "properties": {
+            "ip": {
+              "type": "ip"
+            },
+            "location": {
+              "type": "geo_point"
+            },
+            "latitude": {
+              "type": "half_float"
+            },
+            "longitude": {
+              "type": "half_float"
+            },
+            "country_name": {
+              "type": "keyword"
+            },
+            "city_name": {
+              "type": "keyword"
+            }
+          }
+        },
+        "security_severity": {
+          "type": "keyword"
+        },
+        "security_event_type": {
+          "type": "keyword"
+        },
+        "user_id": {
+          "type": "keyword"
+        },
+        "user_action": {
+          "type": "keyword"
+        },
+        "important_user_action": {
+          "type": "boolean"
+        },
+        "asset_id": {
+          "type": "keyword"
+        },
+        "asset_type": {
+          "type": "keyword"
+        },
+        "asset_action": {
+          "type": "keyword"
+        },
+        "transaction_id": {
+          "type": "keyword"
+        },
+        "transaction_type": {
+          "type": "keyword"
+        },
+        "transaction_status": {
+          "type": "keyword"
+        },
+        "high_value_transaction": {
+          "type": "boolean"
+        },
+        "blockchain_network": {
+          "type": "keyword"
+        },
+        "transaction_hash": {
+          "type": "keyword"
+        },
+        "block_height": {
+          "type": "long"
+        },
+        "log_data": {
+          "type": "object",
+          "dynamic": true,
+          "properties": {
+            "data": {
+              "type": "object",
+              "dynamic": true,
+              "properties": {
+                "amount": {
+                  "type": "float"
+                },
+                "ip_address": {
+                  "type": "ip"
+                },
+                "user_agent": {
+                  "type": "keyword",
+                  "fields": {
+                    "text": {
+                      "type": "text",
+                      "analyzer": "realstack_analyzer"
+                    }
+                  }
+                },
+                "request_path": {
+                  "type": "text",
+                  "analyzer": "path_analyzer",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    }
+                  }
+                },
+                "error_code": {
+                  "type": "keyword"
+                },
+                "error_message": {
+                  "type": "text",
+                  "analyzer": "realstack_analyzer"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "composed_of": [],
+  "priority": 200,
+  "_meta": {
+    "description": "模板用于RealStack应用程序日志",
+    "version": "1.0.0"
+  }
+} 
