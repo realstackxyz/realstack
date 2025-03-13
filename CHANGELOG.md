@@ -2,7 +2,7 @@
 
 All notable changes to the RealStack project will be documented in this file.
 
-## [1.0.2] - 2025-03-10
+## [1.0.2] - 2024-08-16
 
 ### Added
 - VSCode configuration for better development experience
@@ -25,7 +25,7 @@ All notable changes to the RealStack project will be documented in this file.
 - Development to production pipeline
 - Build and deployment configurations
 
-## [1.0.1] - 2025-03-10
+## [1.0.1] - 2024-07-15
 
 ### Added
 - Social preview image for repository branding
@@ -37,11 +37,11 @@ All notable changes to the RealStack project will be documented in this file.
 - CI/CD workflow configuration
 
 ### Fixed
-- Fixed GitHub workflow permissions
+- GitHub workflow permissions
 - Corrected domain references throughout codebase
 - Updated API and frontend URL configurations
 
-## [1.0.0] - 2025-03-09
+## [1.0.0] - 2024-06-20
 
 ### Added
 - Initial release of RealStack platform
